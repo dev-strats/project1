@@ -69,12 +69,12 @@ class Future(Data_Base):
         return ret
 
 class Rolling_Future_Strategy(Strategy_Base):
-    def __init__(self, ticker_root, ticker_type, initial_contract, initial_date):
+    def __init__(self, ticker_root, ticker_type, initial_contract):
         Strategy_Base.__init__(self)
         self.param_data["Ticker Root"] = ticker_root
         self.param_data["Ticker Type"] = ticker_type
         self.param_data["Initial Contract"] = initial_contract
-        self.param_data["Initial Date"] = initial_date
+        #self.param_data["Initial Date"] = initial_date
 
     def get_values(self,start_date,end_date):
         # start from the initial contract, and find out every rolls.
@@ -112,9 +112,9 @@ class Rolling_Future_Strategy(Strategy_Base):
 ## test code...
 
 # print(dummy_db_query_func("ABC","Dummy", "2018-05-24", "2018-06-01"))
-rf = Rolling_Future_Strategy("CL", "Ric", "CLH3", pd.to_datetime("2013-03-01"))
-ret = rf.get_values(pd.to_datetime("2017-11-10"),pd.to_datetime("2018-03-05"))
-print(ret)
+#rf = Rolling_Future_Strategy("CL", "Ric", "CLH3")
+#ret = rf.get_values(pd.to_datetime("2017-11-10"),pd.to_datetime("2018-03-05"))
+#print(ret)
 
 
 

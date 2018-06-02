@@ -7,9 +7,8 @@ from rest_framework.parsers import JSONParser
 
 from hello.models import City
 from hello.models import Rolling_Future_Strategy
-from hello.serializers import CitySerializer
+from hello.serializers import CitySerializer, StrategySerializer
 
-import pandas as pd
 import json
 # Create your views here.
 
@@ -30,5 +29,6 @@ def rolling_futures(request):
     Dummy one
     """
     if request.method == 'GET':
-        dummy_rolling_futures = [Rolling_Future_Strategy("CL", "RIC","CLH3", pd.to_datetime("2013-03-01"))]
-        return HttpResponse(json.dumps(dummy_rolling_futures))
+        dummy_rolling_futures = [Rolling_Future_Strategy("CL", "RIC","CLH3")]
+        serializer = StrategySerializer(dummy_rolling_futures, many=True)
+        return JsonResponse(serializer.data, safe=False)
