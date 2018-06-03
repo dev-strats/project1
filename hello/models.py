@@ -1,7 +1,8 @@
 from django.db import models
 import pandas as pd
 import datetime
-import db
+from . import db #used in the other version....
+# import db
 
 # Create your models here.
 class City:
@@ -31,6 +32,7 @@ class Strategy_Base:
     def __init__(self):
         self.children_strategies = {}
         self.param_data = {}
+        self.values = {}
 
     def get_values(self,start_date,end_date):
         return None
@@ -92,6 +94,12 @@ class Rolling_Future_Strategy(Strategy_Base):
     def get_values(self,start_date,end_date):
         # start from the initial contract, and find out every rolls.
 
+        if isinstance(start_date,str):
+            start_date = pd.to_datetime(start_date)
+
+        if isinstance(end_date, str):
+            end_date = pd.to_datetime(end_date)
+
         # 1. get the contract series - the data is expected to live in database ( for different future, the contract months list should be saved in database).
         contract = self.param_data["Initial Contract"]
         contract_obj = Future(contract, self.param_data["Ticker Type"])
@@ -121,7 +129,9 @@ class Rolling_Future_Strategy(Strategy_Base):
             ret_values.append(roll_fees+dummy_db_query_func(contract_obj.param_data["Ticker"], contract_obj.param_data["Ticker Type"],date_iter,date_iter)[0])
 
         self.children_strategies["Current Future Contract"] = contract_obj.param_data["Ticker"]
-        return pd.Series(ret_values,index=bdays)
+        ret =  pd.Series(ret_values,index=bdays)
+        self.values = ret.to_json(date_format='iso')
+        return ret
 
 
 ## test code...
