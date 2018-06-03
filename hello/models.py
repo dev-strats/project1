@@ -1,7 +1,7 @@
 from django.db import models
 import pandas as pd
-import random
 import datetime
+import db
 
 # Create your models here.
 class City:
@@ -9,10 +9,23 @@ class City:
         self.name = name
         self.population = population
 
-def dummy_db_query_func(ticker, ticker_type, start_date, end_date):
-    bdays = pd.bdate_range(start=start_date, end=end_date)
-    ret = pd.Series([random.randint(1,100) for i in range(len(bdays))], index=bdays)
-    return ret
+the_dummy_db_cache = {} # again this should be handled in db module and in a better way.
+def dummy_db_query_func(ticker, ticker_type, start_date, end_date): # this function should be done in db module level...need to discuss a API for this.
+    global the_dummy_db_cache
+    key = ticker+"@"+ticker_type
+    if key in the_dummy_db_cache:
+        raw_data = the_dummy_db_cache[key]
+    else:
+        raw_data = db.get_quandl_data(ticker) # consider add ticker_type (for example - here  the ticker_type is quandl.)
+        the_dummy_db_cache[key] = raw_data
+
+    refined_data = pd.Series(raw_data.Settle)[start_date:end_date]
+
+    # fix this temp hack - needs correct holiday calendar.
+    if len(refined_data) == 0 and start_date == end_date:
+        refined_data = pd.Series(raw_data.Settle)[start_date - datetime.timedelta(days=5):end_date]
+        refined_data = refined_data[0:1]
+    return refined_data
 
 class Strategy_Base:
     def __init__(self):
@@ -42,29 +55,29 @@ class Future(Data_Base):
         self.param_data["Expiration Date"] = None
         self.param_data["Last Trading Date"] = None
         self.param_data["Roll Date"] = None
-        self.param_data["Month Letters"] = "FGHJKMNQUVXZ"
+        self.param_data["Month Letters"] = "HMUZ"
 
         # a fake roll date:
-        month = self.param_data["Month Letters"].index(self.param_data["Ticker"][-2]) + 1
-        day = 19
-        year = int(self.param_data["Ticker"][-1]) + 2010
+        contract_month_pos = -5 # conventions like U8 means U2018, or U2018
+        month = 3*( self.param_data["Month Letters"].index(self.param_data["Ticker"][contract_month_pos]) + 1 )
+        day = 6
+        # year = int(self.param_data["Ticker"][-1]) + 2010
+        year = int(self.param_data["Ticker"][-4:-1]+self.param_data["Ticker"][-1])
         self.param_data["Roll Date"] = pd.to_datetime(str(year) +"-"+str(month)+"-"+str(day))
         # find the first biz day
         self.param_data["Roll Date"]=pd.bdate_range(self.param_data["Roll Date"],self.param_data["Roll Date"]+datetime.timedelta(days=5))[0]
-
         # end of the fake roll date
 
 
     def get_next(self):
-        pos = self.param_data["Month Letters"].index(self.param_data["Ticker"][-2])
-        year = int(self.param_data["Ticker"][-1])
+        contract_month_pos = -5
+        pos = self.param_data["Month Letters"].index(self.param_data["Ticker"][contract_month_pos])
+        year = int(self.param_data["Ticker"][-4:-1]+self.param_data["Ticker"][-1])
         if pos == len(self.param_data["Month Letters"])-1:
             pos = -1
             year += 1
-            if year == 10:
-                year = 0
 
-        new_ticker = self.param_data["Ticker"][:-2] + self.param_data["Month Letters"][pos+1] + str(year)
+        new_ticker = self.param_data["Ticker"][:contract_month_pos] + self.param_data["Month Letters"][pos+1] + str(year)
         ret = Future(new_ticker, self.param_data["Ticker Type"])
         return ret
 
@@ -87,8 +100,9 @@ class Rolling_Future_Strategy(Strategy_Base):
         while contract_obj.param_data["Roll Date"] <= start_date:
             next_contract = contract_obj.get_next()
             roll_date = contract_obj.param_data["Roll Date"]
-            price_diff = dummy_db_query_func(contract_obj.param_data["Ticker"], contract_obj.param_data["Ticker Type"], roll_date, roll_date)[0]\
-                         - dummy_db_query_func(next_contract.param_data["Ticker"], next_contract.param_data["Ticker Type"], roll_date, roll_date)[0]
+            old_c_price = dummy_db_query_func(contract_obj.param_data["Ticker"], contract_obj.param_data["Ticker Type"], roll_date, roll_date)[0]
+            new_c_price = dummy_db_query_func(next_contract.param_data["Ticker"], next_contract.param_data["Ticker Type"], roll_date, roll_date)[0]
+            price_diff = old_c_price - new_c_price
             roll_fees += price_diff
             contract_obj = next_contract
 
@@ -106,16 +120,18 @@ class Rolling_Future_Strategy(Strategy_Base):
 
             ret_values.append(roll_fees+dummy_db_query_func(contract_obj.param_data["Ticker"], contract_obj.param_data["Ticker Type"],date_iter,date_iter)[0])
 
+        self.children_strategies["Current Future Contract"] = contract_obj.param_data["Ticker"]
         return pd.Series(ret_values,index=bdays)
 
 
 ## test code...
 
 # print(dummy_db_query_func("ABC","Dummy", "2018-05-24", "2018-06-01"))
-#rf = Rolling_Future_Strategy("CL", "Ric", "CLH3")
-#ret = rf.get_values(pd.to_datetime("2017-11-10"),pd.to_datetime("2018-03-05"))
-#print(ret)
-
+# rf = Rolling_Future_Strategy("ES", "QUANDL", "CME/ESH2013")
+# ret = rf.get_values(pd.to_datetime("2017-11-10"),pd.to_datetime("2018-03-05"))
+# print(ret)
+# print(rf.children_strategies)
+# db.get_quandl_data("CME/ESU2018")
 
 
 

@@ -24,11 +24,12 @@ def cities(request):
         serializer = CitySerializer(cities, many=True)
         return JsonResponse(serializer.data, safe=False)
 
-def rolling_futures(request):
+def rolling_futures(request, start_date, end_date):
     """
     Dummy one
     """
     if request.method == 'GET':
-        dummy_rolling_futures = [Rolling_Future_Strategy("CL", "RIC","CLH3")]
+        dummy_rolling_futures = [Rolling_Future_Strategy("ES", "QUANDL","CME/ESH2013")]
+        dummy_rolling_futures[0].get_values(start_date,end_date)
         serializer = StrategySerializer(dummy_rolling_futures, many=True)
         return JsonResponse(serializer.data, safe=False)
