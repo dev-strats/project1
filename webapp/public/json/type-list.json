@@ -1,0 +1,18 @@
+[
+	{
+		"id": 1,
+		"name": "Momentum"
+	},
+	{
+		"id":2,
+		"name": "Parity"
+	},
+	{
+		"id":3,
+		"name": "Volta"
+	},
+	{
+		"id":4,
+		"name": "Data"
+	}
+]

@@ -1,0 +1,406 @@
+@media (max-width: 1199px) {
+	.access-hp-hero{
+		/*width: 100%;
+		padding-left: 15px;
+		padding-right: 15px;*/
+	}
+	.bannerInner{
+		padding: 50px 15px;
+	}
+	.access-hp-hero-header{
+		font-size: 34px;
+	}
+	.access-hp-hero-subheader{
+		font-size: 24px;
+		margin: 0;
+		padding: 15px 0 30px;
+		line-height: 38px;
+	}
+	.access-hp-hero-signup{
+		overflow: hidden;
+	}
+	.access-hp-hero-signup-text{
+		width: 100%;
+		text-align: center;
+	}
+	.access-hp-hero-signup >a{
+		float: none;
+		clear: both;
+		display: inline-block;
+		padding-top: 15px;
+		text-align: center;
+		width: 100%;
+	}
+	.access-hp-hero-signup-button{
+		float: none;
+	}
+	.access-hp-press{
+		overflow: hidden;
+		height: auto;
+	}
+	.access-hp-press-banner-item:first-child{
+		padding-right: 10px;
+	}
+	.access-hp-press-banner-item img{
+		height: 18px;
+	}
+	.access-hp-why-use-estimize-title{
+		font-size: 24px;
+	}
+	.access-hp-why-use-estimize{
+		padding: 50px 0;
+	}
+	.access-hp-fade{
+		padding: 50px 0;
+	}
+	.estimize-column.span-60{
+		width: 75%;
+	}
+	.estimize-column.span-40{
+		width: 25%;
+	}
+	.access-hp-quotes-quote-logo{
+		margin-left: 0;
+		float: right;
+	}
+	.access-hp-quotes-quote-text{
+		font-size: 28px;
+	}
+	.access-hp-quotes-quote-author{
+		font-size: 26px;
+	}
+	.access-hp-more-accurate{
+		padding: 30px 0;
+	}
+	.ctn_p{
+		padding: 10px 15px;
+		margin: 0;
+	}
+	.graph_p{
+		margin: 0;
+		padding: 15px 0;
+	}
+	.access-hp-request-more-header{
+		font-size: 32px;
+	}
+	.access-hp-request-more-subheader{
+		font-size: 24px;
+		margin: 0;
+		padding: 20px 0 30px;
+	}
+	.access-hp-five-years-number-label{
+		margin-top: 0;
+	}
+	.app-content{
+		margin-bottom: 0;
+		padding-bottom: 0;
+	}
+	.access-hp-why-use-estimize-description{
+		min-height: 104px;
+	}
+	#tabContainer .nav-pills > li::before{
+		height: 150%;
+	}
+
+}
+
+@media (max-width: 991px) {
+	.bannerInner{
+		padding: 30px 15px;
+	}
+	.access-hp-hero-header {
+		font-size: 28px;
+	}
+	.access-hp-hero-subheader{
+		padding-left: 15px;
+		padding-right: 15px;
+		font-size: 20px;
+	}
+	.access-hp-form-label{
+		border: none;
+		padding: 10px;
+	}
+	.access-hp-hero-signup-text{
+		font-size: 16px;
+	}
+	.access-hp-hero-signup-button{
+		margin: 0;
+		font-size: 14px;
+	}
+	.access-hp-press-banner-item {
+		margin: 30px 9px;
+		float: left;
+	}
+	.access-hp-press-banner-item img {
+		height: 12px;
+	}
+	.access-hp-size-matters{
+		padding: 30px 0;
+	}
+	.pc_img{
+
+	}
+	.pc_img >div{
+		width: 100% !important;
+		float: none;
+		overflow: hidden;
+		padding: 15px;
+		text-align: center;
+	}
+	.access-hp-red-header{
+		font-size: 30px;
+	}
+	.access-hp-size-matters p{
+		font-size: 18px;
+		padding-top: 15px;
+	}
+	.access-hp-five-years-big-number{
+		font-size: 42px;
+	}
+	.access-hp-five-years-number-label{
+		font-size: 14px;
+		padding-top: 7px;
+	}
+	.access-hp-five-years .access-hp-five-years-header{
+		margin: 0;
+		font-size: 28px;
+	}
+	.access-hp-five-years .access-hp-five-years-p{
+		font-size: 18px;
+		margin: 0;
+		padding-top: 7px;
+	}
+	.estimize-column.span-33{
+		width: 100%;
+		padding: 15px 0;
+	}
+	.access-hp-why-use-estimize-description{
+		min-height: auto;
+	}
+	.access-hp-quotes-quote-text{
+		font-size: 20px;
+		text-align: justify;
+	}
+	.access-hp-quotes-quote-author{
+		font-size: 22px;
+	}
+	.access-hp-quotes-quote-logo.access-hp-quotes-quote-logo-d-bank{
+		width: 100%;
+	}
+	.access-hp-quotes-quote-logo.access-hp-quotes-quote-logo-d-bank >img{
+		width: 100%;
+	}
+	.access-hp-more-accurate h1{
+		padding-bottom: 30px;
+		padding-top: 0;
+	}
+	.ctn_p{
+		font-size: 18px;
+	}
+	.access-hp-fade{
+		padding: 30px 0;
+	}
+	.text-center {
+		/*top: 0 !important;*/
+	}
+	.tabHeader .titleHeader{
+		font-size: 20px;
+		padding: 0 15px;
+		padding-right: 30px;
+	}
+	.closeTab{
+		top: 28%;
+	}
+	#tabContainer .nav-pills > li{
+		float: none !important;
+	}
+	#tabContainer .closeTab{
+		display: block !important;
+		top: 20%;
+		right: 5px;
+	}
+	#tabContainer .nav-pills > li::before {
+		height: 182%;
+	}
+}
+
+@media (max-width: 767px) {
+	.access-hp-hero-header{
+		font-size: 20px;
+		line-height: 3rem;
+	}
+	.access-hp-hero-subheader{
+		font-size: 16px;
+		line-height: 24px;
+		padding: 0 0 15px;
+	}
+	.estimize-column.span-50{
+		width: 100%;
+		padding: 0;
+		margin-bottom: 15px;
+	}
+	form.estimize-form .estimize-column{
+		padding: 0;
+	}
+	form.estimize-form .estimize-row{
+		margin-bottom: 0 !important;
+	}
+	input[type=submit].access-hp-form-button{
+		margin: 0;
+		width: auto;
+		display: inline-block;
+		min-width: auto;
+		font-size: 13px;
+		padding: 0px 10px;
+	}
+	.access-hp-form{
+		height: auto;
+		text-align: center;
+	}
+	.access-hp-hero-signup{
+		margin: 15px 0;
+	}
+	.access-hp-hero-signup-button{
+		font-size: 13px;
+		padding: 8px 40px;
+	}
+	.access-hp-press-banner-item img {
+		height: 13px;
+	}
+	.access-hp-press-banner-item {
+		margin: 24px 9px;
+		float: none;
+		display: inline-block;
+		text-align: center;
+	}
+	.access-hp-press-banner-item {
+		margin: 24px 9px;
+		float: left;
+	}
+	.access-hp-five-years{
+		padding: 30px 0;
+	}
+	.access-hp-five-years-big-number{
+		font-size: 32px;
+	}
+	.estimize-column.span-60{
+		width: 100%;
+		float: none;
+	}
+	.estimize-column.span-40{
+		width: 50%;
+		float: none;
+		margin: 15px auto;
+	}
+	.tabHeader .titleHeader{
+		font-size: 16px;
+	}
+	.nav-pills > li > a{
+		padding: 0;
+	}
+	.closeTab {
+		top: 20%;
+	}
+	.borderCenter{
+		height: 104%;
+	}
+	.tabCenter li{
+		margin-right: 0 !important;
+	}
+	#tabContainer .content{
+		margin-top: -10%;
+	}
+	#tabContainer .nav-pills > li{
+		padding-right: 15px;
+	}
+	.tabCenter{
+		top: 17px;
+		padding: 0;
+	}
+	.app-container{
+		padding: 15px;
+		padding-top: 20px;
+	}
+	.col-xs-12{
+		/*padding: 0;*/
+	}
+	#tabContainer .tab-content > .active{
+		/*margin-top: 5%;*/
+	}
+	#tabContainer .tab-content > .tab-pane{
+		/*top: 0;*/
+	}
+	#tabContainer li.active {
+		z-index: 22;
+	}
+	#tabContainer .nav-pills > li > a{
+		padding: 2px 0;
+		z-index: 25;
+	}
+	#tabContainer .nav-pills > li::before {
+		height: 196%;
+		z-index: 3;
+	}
+	#tabContainer .tab-content > .tab-pane .border-top-class {
+		min-height: auto;
+		padding: 7px 0;
+	}
+	#tabContainer .tab-content > .tab-pane .border-top-class >div >button{
+		padding: 4px 12px;
+	}
+	#tabContainer .tab-content > .tab-pane{
+		min-height: 1808px;
+	}
+	#tabContainer .tab-content > .tab-pane{
+		border: 2px solid #dce4ec;
+		border-top: none;
+		top: 35px;
+	}
+	.tab-content >div >div{
+		border-right: none;
+	}
+}
+
+@media (max-width: 480px) {
+	#tabContainer .nav-pills > li > a .titleHeader{
+		display:inline-block;
+		width:100%;
+		white-space: nowrap;
+		overflow:hidden !important;
+		text-overflow: ellipsis;
+		font-size: 15px;
+		padding: 3px 10px 0;
+	}
+	#tabContainer .tabHeader span.titleHeader .pin_button{
+		font-size: 11px;
+		margin-right: 5px;
+		padding: 1px 5px;
+	}
+	.borderCenter{
+		top: 39%;
+	}
+	#tabContainer .tab-content > .tab-pane{
+		width: 100%;
+		min-height: 1837px;
+	}
+	#tabContainer .closeTab {
+		display: block !important;
+		top: 2px;
+		right: 5px;
+	}
+	#tabContainer .nav-pills > li > a {
+		padding: 0;
+		z-index: 25;
+		width: 80%;
+	}
+	#tabContainer .tabHeader span.titleHeader .pin_button{
+		float: left;
+	}
+	#tabContainer .nav-pills > li::before {
+		height: 317%;
+		z-index: 3;
+	}
+	#tabContainer .tab-content > .active {
+		z-index: 23;
+	}
+}

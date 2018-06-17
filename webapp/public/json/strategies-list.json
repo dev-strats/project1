@@ -1,0 +1,209 @@
+[
+	{
+		"id": 1,
+		"name": "Momentum AAPL FXH EUR",
+		"type": "Momentum",
+		"ccy": "EUR",
+		"start_date": "1Jan14",
+		"parameters":{
+		  	"return_estimate": "Weighted",
+		  	"vol_limit": 0.1,
+		  	"period1": 252,
+		  	"period2": 90,
+		  	"weight2": 0.6,
+		  	"weight1": 0.4,
+		  	"fee": 0.001,
+		  	"cash": "OIS+0.2%",
+		  	"underlyings": [
+		    	{
+		      		"name":"QD AAPL PX",
+		      		"cost": 0.00025,
+		      		"running_cost": 0.0005
+		    	}
+		    ]
+		}
+	},
+	{
+		"id":2,
+		"name": "Momentum FB FXH EUR",
+		"type": "Momentum",
+		"ccy": "EUR",
+		"start_date": "1Jan14",
+		"parameters":{
+		  	"return_estimate": "Weighted",
+		  	"vol_limit": 0.1,
+		  	"period1": 0,
+		 	"period2": 90,
+		  	"weight2": 1,
+		  	"fee": 0.001,
+		  	"cash": "OIS+0.25%",
+		    "underlyings": [
+			    {
+			      	"name":"QD FB PX",
+			      	"cost": 0.00105,
+			      	"running_cost": 0.00075
+			    }
+		    ]
+		}
+	},
+	{
+		"id":3,
+		"name": "Parity Basket",
+		"type": "Parity",
+		"ccy": "USD",
+		"start_date": "2Feb15",
+		"parameters":{
+		  	"vol_corr_estimate": "EMA",
+		  	"vol_limit": 0.2,
+		  	"correlation_participation": 0.5,
+		  	"fee": 0.0015,
+		  	"cash": "OIS+0.2%",
+		  	"alpha": 0.95,
+		  	"underlyings": [
+			    {
+			      	"name":"Momentum AAPL FXH EUR",
+			      	"cost": 0.0001,
+			      	"running_cost": 0.0001,
+			      	"cap": 2
+			    },
+			    {
+			      	"name": "Momentum FB FXH EUR",
+			      	"cost": 0.000,
+			      	"running_cost": 0.00,
+			      	"cap": 2
+			    },
+			    {
+			      	"name": "QD AWR PX",
+			      	"cost": 0.0005,
+			      	"running_cost": 0.00075,
+			      	"Ccp": 1.5
+			    },
+			    {
+			      	"name": "Volta C",
+			      	"cost": 0.0012,
+			      	"running_cost": 0,
+			      	"cap": 5
+			    },
+			    {
+			      	"name": "QD XOM PX",
+			      	"cost": 0.001,
+			      	"running_cost": 0.00075,
+			      	"cap": 1.5
+			    }
+		    ]
+		}
+	},
+	{
+		"id":4,
+		"name": "QD AAPL PX",
+		"type": "Data",
+		"ccy": "USD",
+		"start_date": "1Jan09",
+		"parameters":{
+		  	"source": "QD",
+		  	"ticker": "AAPL",
+		  	"database": "WK",
+		  	"auth": "Automatic"
+		}
+	},
+	{
+		"id":5,
+		"name": "QD AWR PX",
+		"type": "Data",
+		"ccy": "USD",
+		"start_date": "03Jan05",
+		"parameters":{
+		  	"source": "QD",
+		  	"ticker": "AWR",
+		  	"database": "WK",
+		 	"auth": "Automatic"
+		}
+	},
+	{
+		"id":6,
+		"name": "QD C PX",
+		"type": "Data",
+		"ccy": "USD",
+		"start_date": "01Jan2000",
+		"parameters":{
+		  	"source": "QD",
+		  	"ticker": "C",
+		  	"database": "WK",
+		  	"auth": "Automatic"
+		}
+	},
+	{
+		"id":7,
+		"name": "QD FB PX",
+		"type": "Data",
+		"ccy": "USD",
+		"start_date": "18May12",
+		"parameters":{
+		  	"source": "QD",
+		  	"ticker": "FB",
+		  	"database": "WK",
+		  	"auth": "Automatic"
+		}
+	},
+	{
+		"id":8,
+		"name": "QD XOM PX",
+		"type": "Data",
+		"ccy": "USD",
+		"start_date": "01Jan2000",
+		"parameters":{
+		  	"source": "QD",
+		  	"ticker": "XOM",
+		  	"database": "WK",
+		  	"auth": "Automatic"
+		}
+	},
+	{
+		"id":9,
+		"name": "Volta C",
+		"type": "Volta",
+		"ccy": "USD",
+		"start_date": "1Jan14",
+		"parameters":{
+		  	"target": 0.12,
+		  	"cap": 1.5,
+		  	"vol_estimate": "Exponential",
+		  	"fee": 0.001,
+		 	"speed": 0.975,
+		  	"initial Estimate": 0.12,
+		  	"return Period": 1,
+		  	"cash": "OIS+0.2%",
+		  	"underlyings": [
+			    {
+			      	"name":"QD C PX",
+			      	"cost": 0.0012,
+			      	"running_cost": 0.0005
+			    }
+		    ]
+		}
+	},
+	{
+		"id":10,
+		"name": "Volta Parity Basket",
+		"type": "Volta",
+		"ccy": "USD",
+		"start_date": "2Feb15",
+		"parameters":{
+	  		"target": 0.15,
+		  	"cap": 1.5,
+		  	"vol_estimate": "Exponential",
+		  	"fee": 0.00,
+		  	"speed": 0.975,
+		  	"initial_estimate": 0.15,
+		 	"return_period": 2,
+		 	"cash": "OIS+0.10%",
+		  	"underlyings": [
+			    {
+			      	"name":"Parity Basket",
+			      	"cost": 0,
+			      	"running_cost": 0.0002
+			    }
+		    ]
+		}
+	}	
+]

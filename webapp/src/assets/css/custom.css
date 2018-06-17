@@ -1,0 +1,476 @@
+.home{
+	overflow: hidden;
+	margin-top: -30px;
+}
+.navbar-inverse{
+	margin-bottom: 0;
+}
+.access-hp-video-container-overlay {
+	/*position: absolute;
+	top: 60px;
+	right: 0;
+	left: 0;
+	bottom: 0;*/
+	margin-top: 30px;
+	background: -moz-linear-gradient(left, #000 0%, rgba(0,0,0,0.7) 15%, rgba(4,42,71,0.7) 50%, rgba(0,0,0,0.7) 85%, #000 100%);
+	background: -webkit-linear-gradient(left, #002843 0%, rgba(0,40,67,0.85) 15%, rgba(0,75,127,0.85) 50%, rgba(0,40,67,0.85) 85%, #002843 100%);
+	background: linear,to right,#000 0%,rgba(0,0,0,0.7) 4%,rgba(4,42,71,0.7) 50%,rgba(0,0,0,0.7) 94%,#000 100%;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000', endColorstr='#000000',GradientType=1 );
+}
+.bannerInner{
+	padding: 60px 0;
+}
+.access-hp-hero{
+	padding: 60px 0;
+	width: 1170px;
+	margin: 0 auto;
+}
+.bannerTop{
+
+}
+.bannerBot{
+
+}
+.access-hp-hero-header {
+	line-height: 4rem;
+	font-size: 2.85rem;
+	color: white;
+	text-transform: uppercase;
+	text-align: center;
+}
+.access-hp-desktop-line-break {
+	display: block;
+}
+.access-hp-hero-subheader {
+	margin: 15px auto 35px;
+	font-weight: 600;
+	color: white;
+	text-align: center;
+}
+.access-hp-hero-touch {
+	display: none;
+}
+.estimize-column {
+	float: left;
+	padding: 1rem;
+}
+.estimize-column:first-child, .estimize-column:only-child {
+	padding-left: 0;
+}
+.estimize-column.span-50 {
+	width: 50%;
+}
+.access-hp-hero-touch-button {
+	cursor: pointer;
+	margin-top: 20px;
+}
+.access-hp-form {
+	width: 600px;
+	margin: auto;
+	height: 175px;
+}
+.access-hp-form-upper-row {
+	margin-bottom: 12px !important;
+}
+form.estimize-form .estimize-column {
+	padding: 0 .5rem;
+}
+form.estimize-form .estimize-column:first-child, form.estimize-form .estimize-column:only-child {
+	padding-left: 0;
+}
+.access-hp-form-label {
+	float: left;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border: 1px solid #fff;
+	padding: 8px 8px 9px;
+	background: white;
+	line-height: 1.6;
+	width: 20%;
+	font-size: 1.1667rem;
+	color: #9d9d9d;
+}
+form.estimize-form input.access-hp-form-input {
+	border-top-left-radius: 0px !important;
+	border-top-right-radius: 5px;
+	border-bottom-left-radius: 0px !important;
+	border-bottom-right-radius: 5px;
+	border: 1px solid #fff !important;
+	border-left: 0 !important;
+	padding: 10px 8px !important;
+	float: left !important;
+	/*height: 40px !important;*/
+	font-size: 1.1667rem !important;
+	width: 80% !important;
+}
+form.estimize-form .estimize-row {
+	margin-bottom: .6rem;
+	overflow: hidden;
+}
+.estimize-form-input, form.estimize-form input, form.estimize-form textarea, .guest-field {
+	display: block;
+	width: 100%;
+}
+input[type=submit].access-hp-form-button {
+	border-style: none;
+	border-radius: 100px;
+	color: white;
+	cursor: pointer;
+	display: block;
+	line-height: 2.7;
+	font-weight: 600;
+	font-size: 1.1667rem;
+	-webkit-font-smoothing: antialiased;
+	margin: 10px 0;
+	padding: 0;
+	text-align: center;
+	text-transform: uppercase;
+	min-width: 200px;
+	background: #f66;
+	margin: auto;
+	margin-top: 30px;
+	width: 200px;
+	font-size: 1.3rem;
+}
+.access-hp-hero-signup {
+	margin: 80px 0px 50px 0px;
+	padding-top: 20px;
+	border-top: 1px solid gray;
+}
+.access-hp-hero-signup-text {
+	margin: 0;
+	color: white;
+	font-size: 1.5rem;
+	float: left;
+	font-weight: 600;
+	padding-top: 10px;
+}
+.access-hp-hero-signup-button {
+	display: inline-block;
+	padding: 10px 60px;
+	border: 1px solid #ffffff;
+	text-transform: uppercase;
+	font-size: 1.5rem;
+	text-align: center;
+	font-weight: 600;
+	border-radius: 50px;
+	opacity: 0.8;
+	margin: 0px 0px 0 10px;
+	color: #ffffff;
+	border: 2px solid;
+	float: right;
+	cursor: pointer;
+	position: relative;
+}
+.access-hp-press-container {
+	background: #F4F5F6;
+}
+.access-hp-press {
+	padding: 0;
+	position: relative;
+	height: 77px;
+}
+.access-hp-press-banner-item:first-child {
+	margin: 20px 20px 10px 0px;
+	color: #9D9D9D;
+}
+.access-hp-press-banner-item {
+	margin: 30px 22px;
+	float: left;
+}
+.access-hp-press-banner-item img {
+	height: 18px;
+}
+.access-hp-size-matters {
+	padding: 80px 0;
+	background: #fff;
+	overflow: hidden;
+}
+.estimize-column.span-50 {
+	width: 50%;
+}
+.access-hp-size-matters-macbook {
+	float: left;
+	width: 100%;
+	/*width: 800px;*/
+	/*margin-left: -300px;*/
+}
+.access-hp-size-matters-text {
+	float: left;
+	/*margin-top: 40px;*/
+}
+.access-hp-red-header {
+	margin: 0;
+	color: #f66;
+	line-height: 1.4em;
+	font-size: 2.85rem;
+}
+.access-hp-size-matters p {
+	font-size: 1.8rem;
+}
+.access-hp-five-years {
+	padding: 80px 0;
+	background: url(../images/home/hero_image-b567c0af5bb747e92fd176ef95f1297b.jpg);
+	background-position-x: -800px;
+	color: #fff;
+	text-align: center;
+}
+.estimize-column.span-33 {
+	width: 33.33%;
+}
+.access-hp-five-years-big-number {
+	font-weight: 600;
+	font-size: 60px;
+	color: white;
+	text-align: center;
+}
+.access-hp-five-years-number-label {
+	font-size: 20px;
+	text-transform: uppercase;
+	margin-top: -20px;
+	color: white;
+	text-align: center;
+}
+.access-hp-why-use-estimize {
+	padding: 80px 0px;
+	text-align: center;
+	background: #fff;
+}
+.access-hp-why-use-estimize-header {
+    text-align: center;
+    color: #f66;
+    line-height: 1.4em;
+    font-size: 2.85rem;
+}
+.estimize-column.span-33 {
+    width: 33.33%;
+}
+.access-hp-why-use-estimize-title {
+    font-weight: 600;
+    margin: 0 0 15px;
+    font-size: 28px;
+}
+.access-hp-why-use-estimize-description {
+    font-size: 1.3rem;
+    line-height: 2.0rem;
+    padding: 0 20px;
+}
+.access-hp-why-use-estimize-button {
+    border-style: none;
+    border-radius: 100px;
+    color: white;
+    cursor: pointer;
+    display: block;
+    line-height: 2.7;
+    font-weight: 600;
+    font-size: 1.1667rem;
+    -webkit-font-smoothing: antialiased;
+    margin: 10px 0;
+    padding: 0;
+    text-align: center;
+    text-transform: uppercase;
+    min-width: 200px;
+    background: #f66;
+    margin-top: 10px;
+    display: inline-block;
+    width: 120px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border: 2px solid #f66;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+.access-hp-quotes {
+    padding: 80px 0px;
+        background: #3198d4;
+    background: -moz-linear-gradient(left, #3198d4 0%, #0e75b1 100%);
+    background: -webkit-linear-gradient(left, #3198d4 0%, #0e75b1 100%);
+    background: linear,to right,#3198d4 0%,#0e75b1 100%;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3198d4', endColorstr='#0e75b1',GradientType=1 );
+    position: relative;
+}
+.access-hp-quotes-quote{
+	display: block;
+}
+.estimize-column {
+    float: left;
+    padding: 1rem;
+}
+.estimize-column:first-child, .estimize-column:only-child {
+    padding-left: 0;
+}
+.estimize-column.span-60 {
+    width: 60%;
+    position: relative;
+}
+.access-hp-quotes-quote-text {
+    color: white;
+    font-weight: 400;
+    text-indent: 60px;
+}
+.access-hp-quotes-quote-text {
+    font-size: 2.5rem;
+}
+.access-hp-quotes-quote-icon {
+    font-size: 100px;
+    font-weight: 800;
+    opacity: .5;
+}
+.access-hp-quotes-quote-icon {
+    position: absolute;
+    top: -30px;
+    left: -60px;
+}
+.access-hp-quotes-quote-author {
+    font-weight: 200;
+    color: white;
+    text-transform: uppercase;
+}
+.access-hp-quotes-quote-author {
+    font-size: 2.0rem;
+}
+.estimize-column.span-40 {
+    width: 40%;
+}
+.access-hp-quotes-quote-logo {
+    margin-top: 40px;
+    margin-left: 80px;
+}
+.access-hp-quotes-quote-logo.access-hp-quotes-quote-logo-d-bank {
+    margin-top: 0px;
+}
+.access-hp-quotes-quote{
+	position: relative;
+}
+.access-hp-more-accurate {
+    padding: 80px 0;
+    background: #fff;
+}
+.access-hp-fade {
+    opacity: 1;
+    -webkit-transition: opacity 600ms ease-in-out;
+    -moz-transition: opacity 600ms ease-in-out;
+    transition: opacity 600ms ease-in-out;
+}
+.estimize-column.span-50 {
+    width: 50%;
+}
+.access-hp-more-accurate-img-caption {
+    color: #9d9d9d;
+    margin-top: 30px;
+    font-size: 1.083rem;
+}
+.access-hp-hidden {
+}
+.access-hp-fade {
+    opacity: 1;
+    -webkit-transition: opacity 600ms ease-in-out;
+    -moz-transition: opacity 600ms ease-in-out;
+    transition: opacity 600ms ease-in-out;
+}
+.access-hp-more-accurate-header {
+    text-align: center;
+}
+.access-hp-more-accurate-text {
+    font-size: 1.8rem;
+    padding-top: 20px;
+}
+.access-hp-hidden{
+	width: 100%;
+}
+.access-hp-request-more {
+    padding: 80px 0;
+    background: #555;
+    background: -moz-linear-gradient(left, #555 0%, #858585 100%);
+    background: -webkit-linear-gradient(left, #555 0%, #858585 100%);
+    background: linear,to right,#555 0%,#858585 100%;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#555555', endColorstr='#858585',GradientType=1 );
+}
+.access-hp-fade {
+    opacity: 1;
+    -webkit-transition: opacity 600ms ease-in-out;
+    -moz-transition: opacity 600ms ease-in-out;
+    transition: opacity 600ms ease-in-out;
+}
+.access-hp-request-more-header {
+    color: white;
+    text-transform: uppercase;
+    text-align: center;
+}
+.access-hp-request-more-header {
+    font-size: 2.85rem;
+}
+.access-hp-request-more-subheader {
+    font-weight: 600;
+    color: white;
+    text-align: center;
+}
+.access-hp-form {
+    width: 80%;
+    margin: auto;
+}
+.access-hp-why-use-estimize-button:hover {
+    background: #f96262;
+    border: 2px solid #f96262;
+}
+.access-hp-why-use-estimize-button-outline:hover {
+    background-color: white;
+    text-decoration: none;
+    border: 2px solid #f96262;
+    color: #e95f5f;
+}
+.access-hp-why-use-estimize-button:active {
+    background: #f66;
+}
+.access-hp-why-use-estimize-button {
+    border-style: none;
+    border-radius: 100px;
+    color: white;
+    cursor: pointer;
+    display: block;
+    line-height: 2.7;
+    font-weight: 600;
+    font-size: 1.1667rem;
+    -webkit-font-smoothing: antialiased;
+    margin: 10px 0;
+    padding: 0;
+    text-align: center;
+    text-transform: uppercase;
+    min-width: 200px;
+    background: #f66;
+    margin-top: 10px;
+    display: inline-block;
+    width: 120px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border: 2px solid #f66;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+.access-hp-why-use-estimize-button-outline {
+    background-color: white;
+    border: 2px solid #f66;
+    color: #f66;
+    font-weight: 600;
+}
+.navbar-inverse {
+    background-color: rgba(55, 109, 146, 0.92);
+    border-color: transparent;
+}
+.navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
+    color: #ffffff;
+    background-color: rgba(55, 109, 146, 0.92);
+}
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form,
+.navbar-inverse .navbar-toggle{
+	border-color: rgba(55, 109, 146, 0.92);
+}
+.navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus{
+	background-color: rgba(55, 109, 146, 0.92);
+}
+.__react_component_tooltip{
+	width: 350px;
+	text-align: center;
+	border-radius: 10px !important;
+	margin-top: -20px !important;
+}

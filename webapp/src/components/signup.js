@@ -1,0 +1,127 @@
+import React, { Component } from 'react';
+import Title, { flushTitle } from 'react-title-component';
+import validator from 'validator';
+
+import SignupPage from '../page/accounts/signup-page';
+import Auth from '../auth';
+
+
+class Signup extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: {
+                first_name: '',
+                last_name: '',
+                email: '',
+                password: '',
+            },
+            valid:{
+                first_name: false,
+                last_name: false,
+                email: false,
+                password: false,
+                form: false,
+                api: false,
+            },
+            formErrors:{
+                first_name: '',
+                last_name: '',
+                email: '',
+                password: '',
+                api: '',
+                api_type: '',
+            },
+        };
+        this.processForm = this.processForm.bind(this);
+        this.changeUser = this.changeUser.bind(this);
+        this.validateField = this.validateField.bind(this);
+        this.validateForm = this.validateForm.bind(this);
+    }
+
+    processForm(event) {
+        event.preventDefault();
+        Auth.authenticateAddListUser(this.state.user).then((res)=>{
+        	if (res.status > 0) {
+        		this.props.history.push("/login");
+        	}else{
+        		let valid = this.state.valid;
+        		let formErrors = this.state.formErrors;
+        		valid.api = false;
+        		formErrors.api = res.error;
+        		this.setState({
+		            valid: valid,
+		            formErrors: formErrors,
+		        });
+        	}
+        });
+    }
+
+    changeUser(event) {
+        const field = event.target.name;
+        const user = this.state.user;
+        const value = event.target.value;
+        user[field] = value;
+
+        this.setState({
+          user
+        },() => { this.validateField(field, value)});
+    }
+
+    validateField(fieldName, value) {
+
+        let valid = this.state.valid;
+        let formErrors = this.state.formErrors;
+        valid.api = false;
+		formErrors.api = '';
+        switch(fieldName) {
+        	case 'first_name':
+                valid.first_name = value.length >= 2;
+                formErrors.first_name = valid.first_name ? '': fieldName + ' is too short';
+                break;
+            case 'last_name':
+                valid.last_name = value.length >= 2;
+                formErrors.last_name = valid.last_name ? '': fieldName + ' is too short';
+                break;
+            case 'email':
+                valid.email = validator.isEmail(value);
+                formErrors.email = valid.email ? '': fieldName + ' is invalid';
+                break;
+            case 'password':
+                valid.password = value.length >= 2;
+                formErrors.password = valid.password ? '': fieldName + ' is too short';
+                break;
+            default:
+                break;
+        }
+
+        this.setState({
+            formErrors: formErrors,
+            valid: valid
+        }, this.validateForm);
+    }
+
+    validateForm() {
+        let value = this.state.valid;
+        value.form = false;
+        if(value.email && value.password && value.first_name && value.last_name){
+            value.form = true;
+        }
+        this.setState({
+            valid: value
+        });
+    }
+
+    render() {
+        return (
+            <SignupPage onSubmit = { this.processForm } onChange = { this.changeUser } user = { this.state.user } valid={this.state.valid} formErrors={this.state.formErrors}/> 
+        )
+    }
+}
+
+Signup.defaultProps = {
+    titlePage: 'Signup',
+};
+
+
+export default Signup;

@@ -1,0 +1,39 @@
+{
+	"type_id": 4,
+	"data": [
+		{
+			"view_name": "Source",
+			"name": "source",
+			"type": "dropdown",
+			"value": ["DB", "QD", "TP"],
+			"dependency": [],
+			"function": {}
+		},
+		{
+			"view_name": "Ticker",
+			"name": "ticker",
+			"type": "string",
+			"dependency": [],
+			"function": {}
+		},
+		{
+			"view_name": "Database",
+			"name": "database",
+			"type": "string",
+			"dependency": ["source"],
+			"function": {
+				"source": "QD"
+			}
+		},
+		{
+			"view_name": "Auth",
+			"name": "auth",
+			"type": "string",
+			"dependency": ["source"],
+			"function": {
+				"source": "QD",
+				"source": "TP"
+			}
+		}		
+	]
+}

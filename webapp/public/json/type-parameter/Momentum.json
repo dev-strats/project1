@@ -1,0 +1,81 @@
+{
+	"type_id": 1,
+	"data": [
+		{
+			"view_name": "Return Estimate",
+			"name": "return_estimate",
+			"type": "dropdown",
+			"value": ["EMA", "Weighted"],
+			"dependency": [],
+			"function": {}
+		},
+		{
+			"view_name": "Vol Limit",
+			"name": "vol_limit",
+			"type": "double",
+			"dependency": [],
+			"function": {}
+		},
+		{
+			"view_name": "Period1",
+			"name": "period1",
+			"type": "integer",
+			"dependency": ["return_estimate"],
+			"function": {
+				"return_estimate": "Weighted"
+			}
+		},
+		{
+			"view_name": "Period2",
+			"name": "period2",
+			"type": "integer",
+			"dependency": ["return_estimate"],
+			"function": {
+				"return_estimate": "Weighted"
+			}
+		},
+		{
+			"view_name": "Weight1",
+			"name": "weight1",
+			"type": "double",
+			"dependency": ["return_estimate", "period1"],
+			"function": {
+				"return_estimate": "Weighted",
+				"period1": 0
+			}
+		},
+		{
+			"view_name": "Weight2",
+			"name": "weight2",
+			"type": "double",
+			"dependency": ["return_estimate", "period2"],
+			"function": {
+				"return_estimate": "Weighted",
+				"period2": 0
+			}
+		},
+		{
+			"view_name": "Alpha",
+			"name": "alpha",
+			"type": "double",
+			"dependency": ["return_estimate"],
+			"function": {
+				"return_estimate": "EMA"
+			}
+		},
+		{
+			"view_name": "Fee",
+			"name": "fee",
+			"type": "double",
+			"dependency": [],
+			"function": {}
+		},
+		{
+			"view_name": "Cash",
+			"name": "cash",
+			"type": "string",
+			"dependency": [],
+			"function": {}
+		}
+	]
+}

@@ -1,0 +1,35 @@
+[
+	{
+		"id": 1,
+		"name": "USD"
+	},
+	{
+		"id":2,
+		"name": "GBP"
+	},
+	{
+		"id":3,
+		"name": "EUR"
+	},
+	{
+		"id":4,
+		"name": "JPY"
+	},
+	{
+		"id":5,
+		"name": "HKD"
+	},
+	{
+		"id":6,
+		"name": "CHF"
+	},
+	{
+		"id":7,
+		"name": "AUD"
+	},
+	{
+		"id":8,
+		"name": "CAD"
+	}
+
+]

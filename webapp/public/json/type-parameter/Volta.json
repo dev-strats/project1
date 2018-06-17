@@ -1,0 +1,84 @@
+{
+	"type_id": 3,
+	"data": [
+		{
+			"view_name": "Target",
+			"name": "target",
+			"type": "double",
+			"dependency": [],
+			"function": {}
+		},
+		{
+			"view_name": "Cap",
+			"name": "cap",
+			"type": "double",
+			"dependency": [],
+			"function": {}
+		},
+		{
+			"view_name": "Vol Estimation",
+			"name": "vol_estimation",
+			"type": "dropdown",
+			"value": ["Exponential", "Lookback"],
+			"dependency": [],
+			"function": {}
+		},
+		{
+			"view_name": "Fee",
+			"name": "fee",
+			"type": "double",
+			"dependency": [],
+			"function": {}
+		},
+		{
+			"view_name": "Speed",
+			"name": "speed",
+			"type": "double",
+			"dependency": ["vol_estimation"],
+			"function": {
+				"vol_estimation": "Exponential"
+			}
+		},
+		{
+			"view_name": "Initial Estimate",
+			"name": "initial_estimate",
+			"type": "double",
+			"dependency": ["vol_estimation"],
+			"function": {
+				"vol_estimation": "Exponential"
+			}
+		},
+		{
+			"view_name": "Lookback",
+			"name": "lookback",
+			"type": "integer",
+			"dependency": ["vol_estimation"],
+			"function": {
+				"vol_estimation": "Lookback"
+			}
+		},
+		{
+			"view_name": "Period",
+			"name": "period",
+			"type": "integer",
+			"dependency": ["vol_estimation"],
+			"function": {
+				"vol_estimation": "Lookback"
+			}
+		},
+		{
+			"view_name": "Return Period",
+			"name": "return_period",
+			"type": "integer",
+			"dependency": [],
+			"function": {}
+		},
+		{
+			"view_name": "Cash",
+			"name": "cash",
+			"type": "string",
+			"dependency": [],
+			"function": {}
+		}
+	]
+}

@@ -1,0 +1,89 @@
+{
+	"type_id": 2,
+	"data": [
+		{
+			"view_name": "Vol/Corr Estimate",
+			"name": "vol_corr_estimate",
+			"type": "dropdown",
+			"value": ["EMA", "Weighted"],
+			"dependency": [],
+			"function": {}
+		},
+		{
+			"view_name": "Vol Limit",
+			"name": "vol_limit",
+			"type": "double",
+			"dependency": [],
+			"function": {}
+		},
+		{
+			"view_name": "Correlation Participation",
+			"name": "correlation_participation",
+			"type": "double",
+			"dependency": [],
+			"function": {}
+		},
+		{
+			"view_name": "Fee",
+			"name": "fee",
+			"type": "double",
+			"dependency": [],
+			"function": {}
+		},
+		{
+			"view_name": "Cash",
+			"name": "cash",
+			"type": "string",
+			"dependency": [],
+			"function": {}
+		},
+		{
+			"view_name": "Period1",
+			"name": "period1",
+			"type": "integer",
+			"dependency": ["vol_corr_estimate"],
+			"function": {
+				"vol_corr_estimate": "Weighted"
+			}
+		},
+		{
+			"view_name": "Period2",
+			"name": "period2",
+			"type": "integer",
+			"dependency": ["vol_corr_estimate"],
+			"function": {
+				"vol_corr_estimate": "Weighted"
+			}
+		},
+		{
+			"view_name": "Weight1",
+			"name": "weight1",
+			"type": "double",
+			"dependency": ["vol_corr_estimate", "period1"],
+			"function": {
+				"vol_corr_estimate": "Weighted",
+				"period1": 0
+			}
+		},
+		{
+			"view_name": "Weight2",
+			"name": "weight2",
+			"type": "double",
+			"dependency": ["vol_corr_estimate", "period2"],
+			"function": {
+				"vol_corr_estimate": "Weighted",
+				"period2": 0
+			}
+		},
+		{
+			"view_name": "Alpha",
+			"name": "alpha",
+			"type": "double",
+			"dependency": ["vol_corr_estimate"],
+			"function": {
+				"vol_corr_estimate": "EMA"
+			}
+		}
+		
+	]
+}
