@@ -2,6 +2,7 @@ from django.db import models
 import pandas as pd
 import datetime
 from . import db #used in the other version....
+import pdb
 # import db
 
 # Create your models here.
@@ -29,17 +30,21 @@ def dummy_db_query_func(ticker, ticker_type, start_date, end_date): # this funct
     return refined_data
 
 class Strategy_Base:
-    def __init__(self):
+    def __init__(self, name):
         self.children_strategies = {}
-        self.param_data = {}
+        self.param_data = {"name": name, "type": "Unknown", "ccy": "Unknown", "start_date": None}
         self.values = {}
 
     def get_values(self,start_date,end_date):
         return None
 
+    def get_param_data(self):
+        return self.param_data
+
 class Data_Base(Strategy_Base): # this is the data object, a special type of strategy.. not the database..
-    def __init__(self, ticker, ticker_type):
-        Strategy_Base.__init__(self)
+    def __init__(self, name, ticker, ticker_type):
+        Strategy_Base.__init__(self, name)
+        self.param_data["type"] = "Data"
         self.param_data["Ticker"] = ticker
         self.param_data["Ticker Type"] = ticker_type
 
@@ -51,8 +56,8 @@ class Data_Base(Strategy_Base): # this is the data object, a special type of str
         return None
 
 class Future(Data_Base):
-    def __init__(self, ticker, ticker_type):
-        Data_Base.__init__(self, ticker, ticker_type)
+    def __init__(self, name, ticker, ticker_type):
+        Data_Base.__init__(self, name, ticker, ticker_type)
         # the blow should be calling some standard API to query database to get future dates data.
         self.param_data["Expiration Date"] = None
         self.param_data["Last Trading Date"] = None
@@ -80,19 +85,24 @@ class Future(Data_Base):
             year += 1
 
         new_ticker = self.param_data["Ticker"][:contract_month_pos] + self.param_data["Month Letters"][pos+1] + str(year)
-        ret = Future(new_ticker, self.param_data["Ticker Type"])
+        ret = Future(new_ticker, new_ticker, self.param_data["Ticker Type"])
         return ret
 
+
 class Rolling_Future_Strategy(Strategy_Base):
-    def __init__(self, ticker_root, ticker_type, initial_contract):
-        Strategy_Base.__init__(self)
+    def __init__(self, name, ticker_root, ticker_type, initial_contract, start_date):
+        Strategy_Base.__init__(self, name)
+        self.param_data["type"] = "Rolling Future"
         self.param_data["Ticker Root"] = ticker_root
         self.param_data["Ticker Type"] = ticker_type
         self.param_data["Initial Contract"] = initial_contract
-        #self.param_data["Initial Date"] = initial_date
+        self.param_data["ccy"] = "USD" # a value should be inferred but for now a hard-coded
+        self.param_data["start_date"] = start_date # this is a str which pd can parse
+
 
     def get_values(self,start_date,end_date):
         # start from the initial contract, and find out every rolls.
+        # pdb.set_trace()
 
         if isinstance(start_date,str):
             start_date = pd.to_datetime(start_date)
@@ -102,7 +112,7 @@ class Rolling_Future_Strategy(Strategy_Base):
 
         # 1. get the contract series - the data is expected to live in database ( for different future, the contract months list should be saved in database).
         contract = self.param_data["Initial Contract"]
-        contract_obj = Future(contract, self.param_data["Ticker Type"])
+        contract_obj = Future(contract, contract, self.param_data["Ticker Type"])
         roll_fees = 0
         # roll all things before the start date
         while contract_obj.param_data["Roll Date"] <= start_date:
@@ -130,8 +140,9 @@ class Rolling_Future_Strategy(Strategy_Base):
 
         self.children_strategies["Current Future Contract"] = contract_obj.param_data["Ticker"]
         ret =  pd.Series(ret_values,index=bdays)
-        self.values = ret.to_json(date_format='iso')
-        return ret
+        # self.values = ret.to_json(date_format='iso')
+        self.values = [[x.to_pydatetime().strftime("%Y-%m-%d"),y] for (x,y) in zip(ret.index.tolist(), ret.tolist())]
+        return self.values
 
 
 ## test code...
@@ -142,6 +153,7 @@ class Rolling_Future_Strategy(Strategy_Base):
 # print(ret)
 # print(rf.children_strategies)
 # db.get_quandl_data("CME/ESU2018")
+# print(pd.to_datetime("01Mar2013",infer_datetime_format=True))
 
 
 

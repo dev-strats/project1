@@ -10,3 +10,11 @@ class StrategySerializer(serializers.Serializer):
     children_strategies = serializers.DictField()
     param_data = serializers.DictField()
     values = serializers.CharField(allow_blank=True,max_length = 40000)
+
+class PHPRowsSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=True)
+    name = serializers.CharField(allow_blank=True,max_length = 1000)
+
+
+
+
