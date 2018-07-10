@@ -1,7 +1,4 @@
 <?php
-	ini_set("display_errors","On");
-    error_reporting(E_ALL);
-
 	header('Access-Control-Allow-Origin: *');
 	header("Access-Control-Allow-Credentials: true");
     header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
@@ -13,22 +10,14 @@
 	if(function_exists($_GET['f'])) {
 	   	$_GET['f']();
 	}
-	
 
 // 	get list
 	function get_list(){
-        
-		
-		if($_GET["name"] == "strategies"){
-			$string = file_get_contents('http://localhost:8000/hello/strategies',0,NULL,NULL);
-		}
-		else{
-			$string = file_get_contents('http://localhost:8000/hello/strategies/'.$_GET["name"],0,NULL,NULL);
-		}
-		//$string = file_get_contents("../public/json/". $_GET["name"] ."-list.json");
-		
+        $string = file_get_contents("../public/json/". $_GET["name"] ."-list.json");
 		print_r($string);
     }
+
+
 // 	get list
 	function update_click(){
 		sleep(10); 
@@ -38,15 +27,13 @@
 
 // 	strategy-detail
 	function strategy_detail(){
-        //$string = file_get_contents("../public/json/strategy/". $_GET["id"] .".json");
-		$string = file_get_contents('http://localhost:8000/hello/strategies/id/'. $_GET["id"],0,NULL,NULL);
+        $string = file_get_contents("../public/json/strategy/". $_GET["id"] .".json");
 		print_r($string);
     }
 
 // Type-Specific Parameters
 	function type_specific_parameters(){
-        //$string = file_get_contents("../public/json/type-parameter/". $_GET["type"] .".json");
-		$string = file_get_contents('http://localhost:8000/hello/strategies/type/'. $_GET["type"],0,NULL,NULL);
+        $string = file_get_contents("../public/json/type-parameter/". $_GET["type"] .".json");
 		print_r($string);
     }
 
