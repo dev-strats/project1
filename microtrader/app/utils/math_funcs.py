@@ -18,3 +18,28 @@ def realized_variance_exp_decay(pd_series, beta, target, start_date):
             realized_series.append(realized)
 
     return pd.Series(realized_series, index=pd_series1.index)
+
+def add_dict(dict1, dict2):
+    ret = {key: dict1.get(key, 0) + dict2.get(key, 0) for key in set(dict1.keys()) | set(dict2.keys())}
+    return ret
+
+def add_dict_in_place(dict1, dict2):
+    extra_keys = set(dict2) - set(dict1)
+    for key in dict1:
+        dict1[key] += dict2.get(key, 0)
+
+    for key in extra_keys:
+        dict1[key] = dict2[key]
+
+def add_dicts(lst_dicts):
+    ret = {}
+    for item in lst_dicts:
+        add_dict_in_place(ret, item)
+    return ret
+
+def apply_f_on_dict(dict1, f):
+    ret = {}
+    for key in dict1:
+        ret[key] = f(dict1[key])
+    return ret
+

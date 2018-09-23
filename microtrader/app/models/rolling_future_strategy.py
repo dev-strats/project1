@@ -6,9 +6,8 @@ from app.datasource import quandl_wrapper as qw
 
 class RollingFutureStrategy(StrategyBase):
     def __init__(self, name, ticker_root, ticker_type, initial_contract, start_date):
-        StrategyBase.__init__(self, name, start_date)
-        self.ccy = "USD" # a value should be inferred but for now a hard-coded
-
+        # ccy should be implied, fix this.
+        StrategyBase.__init__(self, name, start_date, "USD")
         self.param_data["ticker root"] = ticker_root
         self.param_data["ticker type"] = ticker_type
         self.param_data["initial contract"] = initial_contract
@@ -42,6 +41,7 @@ class RollingFutureStrategy(StrategyBase):
 
             ret_values.append(roll_fees + qw.query_data(contract_obj.ticker, contract_obj.ticker_type,date_iter,date_iter)[0])
 
-        self.children_strategies[contract_obj.ticker] = 1
-        self.values =  pd.Series(ret_values,index=bdays)
+        self.values = pd.Series(ret_values, index=bdays)
+        self.children_strategies[contract_obj.name] = 1
+        self.children_strategies[contract_obj.ccy] = roll_fees
         return self.values

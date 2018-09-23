@@ -4,7 +4,8 @@ from .data_base import DataBase
 
 class FutureContract(DataBase):
     def __init__(self, ticker, ticker_type):
-        DataBase.__init__(self, ticker, ticker_type)
+        # ccy should be implied..for now use USD. fix this.
+        DataBase.__init__(self, ticker, ticker_type, "USD")
         # the blow should be calling some standard API to query database to get future dates data.
         self.param_data["expiration date"] = None
         self.param_data["last trading date"] = None

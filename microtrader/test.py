@@ -4,11 +4,15 @@ from app.models.vol_target import VolTarget
 from app.models.cash import Cash
 from app.utils import converter
 
+# initialize basic data
+usd = Cash("USD")
+
 start_date = pd.to_datetime('2018-01-01')
 end_date = pd.to_datetime('2018-08-31')
-rf = RollingFutureStrategy("Rolling Future 001", "ES", "QUANDL","CME/ESH2013", start_date)
+rf = RollingFutureStrategy("Rolling Future 001", "ES", "QUANDL", "CME/ESH2013", start_date)
 result = rf.get_values(start_date,end_date)
 print(rf.to_json())
+print(rf.get_portfolio())
 
 vt = VolTarget("Vol Target on Rolling Future 001", "Rolling Future 001", 0.8, 0.2, start_date)
 vt.get_values(pd.to_datetime(start_date),pd.to_datetime(end_date))

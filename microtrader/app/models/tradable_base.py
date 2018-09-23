@@ -10,6 +10,8 @@ class TradableManager():
 
     @staticmethod
     def get_tradable_by_name(name):
+        if name not in tradable_cache:
+            raise Exception(name + " not initialized")
         return tradable_cache[name]
 
     @staticmethod
@@ -32,12 +34,12 @@ class TradableManager():
             raise Exception(file_name+" not exists")
 
 class TradableBase():
-    def __init__(self, name):
+    def __init__(self, name, ccy):
 
         #standard properties
         self.name = name
         self.type = self.__class__.__name__
-        self.ccy = None
+        self.ccy = ccy
 
         #flexible parameters
         self.param_data = {}

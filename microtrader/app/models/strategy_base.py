@@ -1,8 +1,9 @@
-from .tradable_base import TradableBase
+from .tradable_base import TradableBase,TradableManager
+import app.utils.math_funcs as math_funcs
 
 class StrategyBase(TradableBase):
-    def __init__(self, name, start_date):
-        TradableBase.__init__(self,name)
+    def __init__(self, name, start_date, ccy):
+        TradableBase.__init__(self, name, ccy)
 
         #properties apply for real strategy
         self.children_strategies = {}
@@ -17,3 +18,11 @@ class StrategyBase(TradableBase):
         data = TradableBase.to_json(self)
         data["children_strategies"] = self.children_strategies
         return data
+
+    def get_portfolio(self):
+        portfolios = [math_funcs.apply_f_on_dict(
+            TradableManager.get_tradable_by_name(child_strategy).get_portfolio(),
+            lambda x: x * qty
+        ) for child_strategy, qty in self.children_strategies.items()]
+        portfolio = math_funcs.add_dicts(portfolios)
+        return portfolio

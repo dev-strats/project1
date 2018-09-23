@@ -12,11 +12,10 @@ class VolTarget(StrategyBase):
         target,
         start_date):
 
-        StrategyBase.__init__(self,name,start_date)
-
+        underlying_strategy = TradableManager.get_tradable_by_name(underlying_strategy_name)
+        StrategyBase.__init__(self,name,start_date, underlying_strategy.ccy)
         # calc initial ratio
         init_ratio = min(cap,1)
-        underlying_strategy = TradableManager.get_tradable_by_name(underlying_strategy_name)
         underlying_price = underlying_strategy.get_values(start_date,start_date)[start_date]
         self.children_strategies[underlying_strategy_name] = init_ratio/underlying_price
         self.children_strategies[underlying_strategy.ccy] = 1-init_ratio
