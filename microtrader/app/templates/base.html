@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    <!-- Navbar -->
+    <div class="w3-bar w3-black">
+      <a href="#account"    class="w3-bar-item w3-button">Account</a>
+      <a href="#strategies" class="w3-bar-item w3-button">Strategies</a>
+      <a href="#contact"    class="w3-bar-item w3-button">Contact</a>
+    </div>
+
+    <!-- Page content -->
+    <div class="w3-content" style="margin-top:10px">
+      {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>
