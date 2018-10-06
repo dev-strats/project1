@@ -11,11 +11,18 @@ def index():
 
 @app.route('/future_data/<start_date>/<end_date>')
 def rolling_future_data(start_date, end_date):
-    rf = RollingFutureStrategy("Rolling Future 001", "ES", "QUANDL", "CME/ESH2013", pd.to_datetime(start_date))
-    result = rf.get_values_json(pd.to_datetime(start_date),pd.to_datetime(end_date))
-    return jsonify(converter.covert_price_to_gdata(result))
-    
+    start_date = pd.to_datetime(start_date)
+    end_date = pd.to_datetime(end_date)
 
+    rf = RollingFutureStrategy("Rolling Future 001", "ES", "QUANDL", "CME/ESH2013", start_date)
+    values = rf.get_values_json(start_date, end_date)
+    result = {
+            "properties" : rf.get_properties(),
+            "param_data" : rf.get_param_data(),
+            "values"     : converter.covert_price_to_gdata(values)
+    }
+    return jsonify(result)
+    
 @app.route('/future')
 def rolling():
     return render_template('future.html')
