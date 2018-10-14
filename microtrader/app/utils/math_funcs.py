@@ -43,3 +43,24 @@ def apply_f_on_dict(dict1, f):
         ret[key] = f(dict1[key])
     return ret
 
+def get_max_draw_down(pd_series, start_date, end_date):
+    start_level = pd_series[start_date]
+    lowest_level = min(pd_series[start_date:end_date])
+    if lowest_level >= start_level:
+        return 0.0
+    else:
+        return (start_level - lowest_level)/start_level
+
+def get_vol(pd_series, start_date, end_date):
+    pd_series1 = pd_series[start_date:end_date]
+    pd_series2 = pd_series1.shift(1)
+    pd_returns = pd_series1.div(pd_series2)[1:]
+    avg_ret = sum(pd_returns)/len(pd_returns)
+    avg_ret_2 = sum(pd_returns.multiply(pd_returns)) / len(pd_returns)
+    vol = math.sqrt((avg_ret_2 - avg_ret*avg_ret)*252)
+    return vol
+
+def get_return(pd_series, start_date, end_date):
+    return (pd_series[end_date] - pd_series[start_date])/pd_series[start_date]
+
+

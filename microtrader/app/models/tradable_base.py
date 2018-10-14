@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import json
+import app.utils.math_funcs as math_funcs
 
 tradable_cache = {}
 
@@ -63,6 +64,24 @@ class TradableBase():
     def get_values(self,start_date,end_date):
         return None
 
+    def get_values_stats(self,start_date,end_date):
+        ret = math_funcs.get_return(self.values,start_date,end_date)
+        vol = math_funcs.get_vol(self.values,start_date,end_date)
+        max_draw_down = math_funcs.get_max_draw_down(self.values,start_date,end_date)
+        sharpe_ratio = ret / vol
+
+        return {
+            "return":   ret,
+            "volatility":   vol,
+            "max_draw_down": max_draw_down,
+            "sharpe_ratio": sharpe_ratio
+        }
+
+    def get_values_all_stats(self):
+        start_date = self.values.index[0]
+        end_date = self.values.index[-1]
+        return self.get_values_stats(start_date,end_date)
+
     def get_values_json(self,start_date,end_date):
         values = self.get_values(start_date,end_date)
         return [[x.to_pydatetime().strftime("%Y-%m-%d"),y] for (x,y) in zip(values.index.tolist(), values.tolist())]
@@ -74,7 +93,8 @@ class TradableBase():
         return {
                     "properties"    : self.get_properties(),
                     "param_data"    : self.get_param_data(),
-                    "values"        : self.get_values_json_all()
+                    "values"        : self.get_values_json_all(),
+                    "stats"         : self.get_values_all_stats(),
                 }
 
     def save_to_file(self):
