@@ -14,8 +14,8 @@ class StrategyBase(TradableBase):
         properties['start_date'] = self.start_date
         return properties
 
-    def to_json(self):
-        data = TradableBase.to_json(self)
+    def to_json(self, start_end_date=None):
+        data = TradableBase.to_json(self, start_end_date=start_end_date)
         data["children_strategies"] = self.children_strategies
         return data
 

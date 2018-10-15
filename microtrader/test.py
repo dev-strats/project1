@@ -2,6 +2,7 @@ import pandas as pd
 from app.models.rolling_future_strategy import RollingFutureStrategy
 from app.models.vol_target import VolTarget
 from app.models.cash import Cash
+from app.models.tradable_base import TradableManager
 from app.utils import converter
 
 # initialize basic data
@@ -19,6 +20,7 @@ vt.get_values(pd.to_datetime(start_date),pd.to_datetime(end_date))
 print(vt.to_json())
 # result = converter.covert_price_to_gdata(result)
 
+print(TradableManager.get_all_tradable_names_by_types())
 # cash = Cash("USD")
 # result = cash.get_values(start_date,end_date)
 # print (cash.to_json())

@@ -34,6 +34,18 @@ class TradableManager():
         else:
             raise Exception(file_name+" not exists")
 
+    @staticmethod
+    def get_all_tradable_names():
+        return list(tradable_cache.keys())
+
+    @staticmethod
+    def get_all_tradable_names_by_types():
+        ret = {}
+        for tradable_name in tradable_cache:
+            temp = {tradable_cache[tradable_name].type:{tradable_name:None}}
+            ret = {**temp,**ret}
+        return ret
+
 class TradableBase():
     def __init__(self, name, ccy):
 
@@ -89,13 +101,24 @@ class TradableBase():
     def get_values_json_all(self):
         return [[x.to_pydatetime().strftime("%Y-%m-%d"),y] for (x,y) in zip(self.values.index.tolist(), self.values.tolist())]
 
-    def to_json(self):
-        return {
-                    "properties"    : self.get_properties(),
-                    "param_data"    : self.get_param_data(),
-                    "values"        : self.get_values_json_all(),
-                    "stats"         : self.get_values_all_stats(),
-                }
+    # this function has to be named as "to_json" to make the jsonify or other stand json api work for the class.
+    # start_end_date is either None or a tuple of two dates
+    def to_json(self, start_end_date = None):
+        if start_end_date == None:
+            return {
+                        "properties"    : self.get_properties(),
+                        "param_data"    : self.get_param_data(),
+                        "values"        : self.get_values_json_all(),
+                        "stats"         : self.get_values_all_stats(),
+                    }
+        else:
+            (start_date, end_date) = start_end_date
+            return {
+                        "properties"    : self.get_properties(),
+                        "param_data"    : self.get_param_data(),
+                        "values"        : self.get_values_json(start_date,end_date),
+                        "stats"         : self.get_values_stats(start_date,end_date),
+                    }
 
     def save_to_file(self):
         file_name = os.curdir+"\\storage\\"+self.name+".json"
