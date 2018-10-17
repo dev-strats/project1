@@ -26,3 +26,6 @@ class StrategyBase(TradableBase):
         ) for child_strategy, qty in self.children_strategies.items()]
         portfolio = math_funcs.add_dicts(portfolios)
         return portfolio
+
+    def is_strategy(self):
+        return True

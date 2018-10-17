@@ -28,5 +28,8 @@ class DataBase(TradableBase): # this is the data object, a special type of trada
         # this should call some standard API for database queries
         return None
 
+    def is_strategy(self):
+        return False
+
     def get_portfolio(self):
         return {self.name:1}

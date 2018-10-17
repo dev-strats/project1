@@ -46,6 +46,15 @@ class TradableManager():
             ret = {**temp,**ret}
         return ret
 
+    @staticmethod
+    def get_all_strategy_names_by_types():
+        ret = {}
+        for tradable_name in tradable_cache:
+            if tradable_cache[tradable_name].is_strategy():
+                temp = {tradable_cache[tradable_name].type:{tradable_name:None}}
+                ret = {**temp,**ret}
+        return ret
+
 class TradableBase():
     def __init__(self, name, ccy):
 
@@ -144,3 +153,6 @@ class TradableBase():
                 self.values = pd.Series([x[1] for x in data["values"]],index=[pd.to_datetime(x[0]) for x in data["values"]])
         else:
             raise Exception(file_name+" not exists")
+
+    def is_strategy(self):
+        return None

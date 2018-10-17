@@ -30,13 +30,18 @@ def rolling_future_data(start_date, end_date):
 def load_all_tradables():
     # a dummy function to return some tradables
     # this will be replaced by proper load of real positions
-    rf = RollingFutureStrategy("Rolling Future 001", "ES", "QUANDL", "CME/ESH2013", pd.to_datetime("2013-04-15"))
-    vt = VolTarget("Vol Target on Rolling Future 001", "Rolling Future 001", 0.8, 0.2, pd.to_datetime("2013-04-15"))
+    rf = RollingFutureStrategy("Rolling_Future_001", "ES", "QUANDL", "CME/ESH2013", pd.to_datetime("2013-04-15"))
+    vt = VolTarget("Vol_Target_on_Rolling_Future_001", "Rolling_Future_001", 0.8, 0.2, pd.to_datetime("2013-04-15"))
     return jsonify({})
 
 @app.route('/internal/tradable_names_by_type')
 def tradable_names_by_type():
     ret = TradableManager.get_all_tradable_names_by_types()
+    return jsonify(ret)
+
+@app.route('/internal/strategy_names_by_type')
+def strategy_names_by_type():
+    ret = TradableManager.get_all_strategy_names_by_types()
     return jsonify(ret)
 
 @app.route('/internal/tradable/<tradable_name>/<start_date>/<end_date>')
