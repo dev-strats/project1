@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+h4 { background-color: lightblue; }
+</style>
+
+<script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart']});
+    // google.charts.setOnLoadCallback(function() { drawChart(10) });
+
+    window.onload = init;
+    function init() {
+        var jsonData = $.ajax({
+            url: "/internal/strategy_names_by_type",
+            dataType: "json",
+            async: false
+        }).responseText;
+
+        var strategyTypeNode = document.getElementById("strategy_type_select");
+        addSelectList(strategyTypeNode, JSON.parse(jsonData));
+        updateStrategyNames();
+    }
+
+    function updateStrategyNames() {
+        var jsonData = $.ajax({
+            url: "/internal/strategy_names_by_type",
+            dataType: "json",
+            async: false
+        }).responseText;
+
+        var strategyType = $('#strategy_type_select').val();
+        var strategyNameNode = document.getElementById("strategy_name_select");
+        removeAllChildren(strategyNameNode);
+        addSelectList(strategyNameNode, JSON.parse(jsonData)[strategyType]);
+        updateStrategyDetails();
+    }
+
+    function removeAllChildren(node) {
+        while (node.firstChild) {
+            node.removeChild(node.firstChild);
+        }
+    }
+ 
+    function addSelectList(node, data) {
+        for (var key in data) {
+            var item = document.createElement('option');
+            item.innerText = key;
+            item.value = key;
+            node.appendChild(item);
+        }
+    }
+
+    function addTable(node, data) {
+         for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+                var div1 = document.createElement('div');
+                div1.className = 'w3-row';
+                node.appendChild(div1);
+
+                var div2 = document.createElement('div');
+                div2.className = 'w3-container w3-third';
+                div2.innerText = key.replace(/_/g, " ") + ':';
+                div1.appendChild(div2);
+
+                var div3 = document.createElement('div');
+                div3.className = 'w3-container w3-twothird';
+                var v = data[key];
+                div3.innerText = typeof(v) === 'number' ? v.toFixed(5) : v;
+                div1.appendChild(div3);
+            }
+        }
+    }
+     
+    function updateStrategyDetails() {
+        var jsonData = $.ajax({
+            url: "/internal/tradable/" + $('#strategy_name_select').val() + "/" + $('#fromDate').val() + "/" + $('#toDate').val(),
+            dataType: "json",
+            async: false
+        }).responseText;
+
+        var obj = JSON.parse(jsonData);
+        // document.getElementById("debug").innerHTML = obj;
+
+        var paramDataNode = document.getElementById("param_data");
+        removeAllChildren(paramDataNode);
+        addTable(paramDataNode, obj.param_data);
+
+        var propertiesNode = document.getElementById("properties");
+        removeAllChildren(propertiesNode);
+        addTable(propertiesNode, obj.properties);
+
+        var statisticsNode = document.getElementById("statistics");
+        removeAllChildren(statisticsNode);
+        addTable(statisticsNode, obj.stats);
+
+        // Create our data table out of JSON data loaded from server.
+        var data = new google.visualization.DataTable(JSON.stringify(obj.values));
+        var options = {
+          curveType: 'function',
+          //title: 'Rolling Future Price ($)',
+          legend: { position: 'top' }
+        };
+        
+        chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+        chart.draw(data, options);
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="debug" style="display:none">Debug</div>
+
+<div class="w3-row">
+    <h4>Input</h4>
+    <div class="w3-container w3-half">
+        <div class="w3-row">
+            <div class="w3-container w3-third">
+                Strategy Type:
+            </div>
+            <div class="w3-container w3-twothird">
+                <select id="strategy_type_select" onchange="updateStrategyNames()"></select>
+            </div>
+        </div>
+        <div class="w3-row">
+            <div class="w3-container w3-third">
+                Name:
+            </div>
+            <div class="w3-container w3-twothird">
+                <select id="strategy_name_select" onchange="updateStrategyDetails()"></select>
+            </div>
+        </div>
+    </div>
+
+    <div class="w3-container w3-half">
+        <div class="w3-row">
+            <div class="w3-container w3-quarter">
+                From:
+            </div>
+            <div class="w3-container w3-threequarter">
+                <input type="text" id="fromDate" value="2018-08-01" onchange="updateStrategyDetails()">
+            </div>
+        </div>
+        <div class="w3-row">
+            <div class="w3-container w3-quarter">
+                To:
+            </div>
+            <div class="w3-container w3-threequarter">
+                <input type="text" id="toDate" value="2018-08-31" onchange="updateStrategyDetails()">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="w3-row">
+    <div class="w3-container w3-half">
+        <h4>Param Data</h4>
+        <div id="param_data"></div> 
+    </div>
+
+    <div class="w3-container w3-half">
+        <h4>Properties</h4>
+        <div id="properties"></div> 
+    </div>
+</div>
+
+<div class="w3-row" style="margin-top:20px">
+    <div class="w3-container w3-half">
+        <h4>Rolling Future Price ($)</h4>
+        <div id="curve_chart"></div>
+    </div>
+    <div class="w3-container w3-half">
+        <h4>Statistics Table</h4>
+        <div id="statistics"></div> 
+    </div>
+</div>
+
+{% endblock %}
