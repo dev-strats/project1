@@ -2,58 +2,7 @@ import pandas as pd
 import os
 import json
 import app.utils.math_funcs as math_funcs
-
-tradable_cache = {}
-
-class TradableManager():
-    def __init__(self):
-        pass
-
-    @staticmethod
-    def get_tradable_by_name(name):
-        if name not in tradable_cache:
-            raise Exception(name + " not initialized")
-        return tradable_cache[name]
-
-    @staticmethod
-    def register_tradable_by_name(name, obj):
-        global tradable_cache
-        tradable_cache[name] = obj
-
-    @staticmethod
-    def get_tradable_by_file(file_name):
-        if os.path.isfile(file_name):
-            with open(file_name) as in_file:
-                data = json.load(in_file)
-                name = data["name"]
-                if name in tradable_cache:
-                    return TradableManager.get_tradable_by_name(name)
-                else:
-                    # we need to initialize the class pragrammactically
-                    return None
-        else:
-            raise Exception(file_name+" not exists")
-
-    @staticmethod
-    def get_all_tradable_names():
-        return list(tradable_cache.keys())
-
-    @staticmethod
-    def get_all_tradable_names_by_types():
-        ret = {}
-        for tradable_name in tradable_cache:
-            temp = {tradable_cache[tradable_name].type:{tradable_name:None}}
-            ret = {**temp,**ret}
-        return ret
-
-    @staticmethod
-    def get_all_strategy_names_by_types():
-        ret = {}
-        for tradable_name in tradable_cache:
-            if tradable_cache[tradable_name].is_strategy():
-                temp = {tradable_cache[tradable_name].type:{tradable_name:None}}
-                ret = {**temp,**ret}
-        return ret
+from .tradable_manager import TradableManager
 
 class TradableBase():
     def __init__(self, name, ccy):
