@@ -52,6 +52,7 @@ class VolTarget(StrategyBase):
                           (1-lev)*libor*date_funcs.calc_time(date_pre, date))
                 lev = min(cap, target/math.sqrt(realized_variance_pre))
                 realized_variance_pre = realized_variance[date]
+                underlying_price_pre = underlying_prices[date]
                 values.append(value)
 
         self.values = pd.Series(values,index=realized_variance.index)
