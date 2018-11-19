@@ -51,7 +51,7 @@ h4 { background-color: lightblue; }
         }
     }
 
-    function addTable(node, data) {
+    function addTable(node, data, editable) {
         for (var key in data) {
             if (data.hasOwnProperty(key)) {
                 var div1 = document.createElement('div');
@@ -65,42 +65,30 @@ h4 { background-color: lightblue; }
 
                 var div3 = document.createElement('div');
                 div3.className = 'w3-container w3-twothird';
-                var v = data[key];
-                if (typeof(v) === 'number')
-                    div3.innerText = v.toFixed(5);
-                else if (v instanceof Date)
-                    div3.innerText = v.toLocaleDateString();
+                if (editable)
+                {
+                    var input = document.createElement("input");
+                    input.type = "text";
+                    input.name = key;
+                    input.value = data[key];
+                    div3.appendChild(input);
+                }
                 else
-                    div3.innerText = v;
+                {
+                    var v = data[key];
+                    if (typeof(v) === 'number')
+                        div3.innerText = v.toFixed(5);
+                    else if (v instanceof Date)
+                        div3.innerText = v.toLocaleDateString();
+                    else
+                        div3.innerText = v;
+                }
+
                 div1.appendChild(div3);
             }
         }
     }
-
-    function addEditableTable(node, data) {
-        for (var key in data) {
-            if (data.hasOwnProperty(key)) {
-                var div1 = document.createElement('div');
-                div1.className = 'w3-row';
-                node.appendChild(div1);
-
-                var div2 = document.createElement('div');
-                div2.className = 'w3-container w3-third';
-                div2.innerText = key.replace(/_/g, " ") + ':';
-                div1.appendChild(div2);
-
-                var div3 = document.createElement('div');
-                div3.className = 'w3-container w3-twothird';
-                var input = document.createElement("input");
-                input.type = "text";
-                input.name = key;
-                input.value = data[key];
-                div3.appendChild(input);
-                div1.appendChild(div3);
-            }
-        }
-    }
-     
+    
     function updateStrategyDetails() {
         var jsonData = $.ajax({
             url: "/internal/tradable/" + $('#strategy_name_select').val() + "/" + $('#fromDate').val() + "/" + $('#toDate').val(),
@@ -113,15 +101,15 @@ h4 { background-color: lightblue; }
 
         var paramDataNode = document.getElementById("param_data_container");
         removeAllChildren(paramDataNode);
-        addEditableTable(paramDataNode, obj.param_data);
+        addTable(paramDataNode, obj.param_data, true);
 
         var propertiesNode = document.getElementById("properties");
         removeAllChildren(propertiesNode);
-        addTable(propertiesNode, obj.properties);
+        addTable(propertiesNode, obj.properties, false);
 
         var statisticsNode = document.getElementById("statistics");
         removeAllChildren(statisticsNode);
-        addTable(statisticsNode, obj.stats);
+        addTable(statisticsNode, obj.stats, false);
 
         // Create our data table out of JSON data loaded from server.
         var data = new google.visualization.DataTable(JSON.stringify(obj.values));
