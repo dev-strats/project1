@@ -1,8 +1,11 @@
-from flask import render_template, flash, redirect, jsonify 
+from flask import render_template, flash, redirect, jsonify, request
 from app import app
 import pandas as pd
 from .models.tradable_base import TradableManager
 from .utils import converter
+
+# Initalize TradableManager
+TradableManager.load_strategies()
 
 @app.route('/')
 @app.route('/index')
@@ -12,6 +15,16 @@ def index():
 @app.route('/internal/strategy_names_by_type')
 def strategy_names_by_type():
     ret = TradableManager.get_all_strategy_names_by_types()
+    return jsonify(ret)
+
+@app.route('/internal/strategy_types')
+def strategy_types():
+    ret = TradableManager.get_all_strategy_types()
+    return jsonify(ret)
+
+@app.route('/internal/strategy_names/<type_name>')
+def strategy_names(type_name):
+    ret = TradableManager.get_all_strategy_names_by_type(type_name)
     return jsonify(ret)
 
 @app.route('/internal/tradable/<tradable_name>/<start_date>/<end_date>')
@@ -28,6 +41,11 @@ def tradable_data(tradable_name, start_date, end_date):
 
 @app.route('/strategy')
 def strategy():
-    # TradableManager.load_strategy_definitions()
-    TradableManager.load_strategies()
     return render_template('strategy.html')
+
+@app.route('/internal/strategy_postback', methods=['GET', 'POST'])
+def test_action():
+    # request.args: the key/value pairs in the URL query string
+    # request.form: the key/value pairs in the body, from a HTML post form, or JavaScript request that isn't JSON encoded
+    data = request.form.to_dict(flat=False)
+    return str(data)

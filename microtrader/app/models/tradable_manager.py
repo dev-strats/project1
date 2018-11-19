@@ -86,8 +86,7 @@ class TradableManager():
     @staticmethod
     def get_all_strategy_names_by_type(type_name):
         all_strategies = TradableManager.get_all_strategy_names_by_types()
-        ret = all_strategies[type_name]
-        return ret
+        return list(all_strategies[type_name].keys())
 
     def get_strategy_param_data(strategy_name):
         strategy = TradableManager.get_tradable_by_name(strategy_name)

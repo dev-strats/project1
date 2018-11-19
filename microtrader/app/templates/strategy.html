@@ -12,7 +12,7 @@ h4 { background-color: lightblue; }
     window.onload = init;
     function init() {
         var jsonData = $.ajax({
-            url: "/internal/strategy_names_by_type",
+            url: "/internal/strategy_types",
             dataType: "json",
             async: false
         }).responseText;
@@ -23,16 +23,16 @@ h4 { background-color: lightblue; }
     }
 
     function updateStrategyNames() {
+        var strategyType = $('#strategy_type_select').val();
         var jsonData = $.ajax({
-            url: "/internal/strategy_names_by_type",
+            url: "/internal/strategy_names/" + strategyType,
             dataType: "json",
             async: false
         }).responseText;
 
-        var strategyType = $('#strategy_type_select').val();
         var strategyNameNode = document.getElementById("strategy_name_select");
         removeAllChildren(strategyNameNode);
-        addSelectList(strategyNameNode, JSON.parse(jsonData)[strategyType]);
+        addSelectList(strategyNameNode, JSON.parse(jsonData));
         updateStrategyDetails();
     }
 
@@ -43,16 +43,16 @@ h4 { background-color: lightblue; }
     }
  
     function addSelectList(node, data) {
-        for (var key in data) {
+        for (var i=0; i<data.length; i++) {
             var item = document.createElement('option');
-            item.innerText = key;
-            item.value = key;
+            item.innerText = data[i];
+            item.value = data[i];
             node.appendChild(item);
         }
     }
 
     function addTable(node, data) {
-         for (var key in data) {
+        for (var key in data) {
             if (data.hasOwnProperty(key)) {
                 var div1 = document.createElement('div');
                 div1.className = 'w3-row';
@@ -66,7 +66,36 @@ h4 { background-color: lightblue; }
                 var div3 = document.createElement('div');
                 div3.className = 'w3-container w3-twothird';
                 var v = data[key];
-                div3.innerText = typeof(v) === 'number' ? v.toFixed(5) : v;
+                if (typeof(v) === 'number')
+                    div3.innerText = v.toFixed(5);
+                else if (v instanceof Date)
+                    div3.innerText = v.toLocaleDateString();
+                else
+                    div3.innerText = v;
+                div1.appendChild(div3);
+            }
+        }
+    }
+
+    function addEditableTable(node, data) {
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+                var div1 = document.createElement('div');
+                div1.className = 'w3-row';
+                node.appendChild(div1);
+
+                var div2 = document.createElement('div');
+                div2.className = 'w3-container w3-third';
+                div2.innerText = key.replace(/_/g, " ") + ':';
+                div1.appendChild(div2);
+
+                var div3 = document.createElement('div');
+                div3.className = 'w3-container w3-twothird';
+                var input = document.createElement("input");
+                input.type = "text";
+                input.name = key;
+                input.value = data[key];
+                div3.appendChild(input);
                 div1.appendChild(div3);
             }
         }
@@ -82,9 +111,9 @@ h4 { background-color: lightblue; }
         var obj = JSON.parse(jsonData);
         // document.getElementById("debug").innerHTML = obj;
 
-        var paramDataNode = document.getElementById("param_data");
+        var paramDataNode = document.getElementById("param_data_container");
         removeAllChildren(paramDataNode);
-        addTable(paramDataNode, obj.param_data);
+        addEditableTable(paramDataNode, obj.param_data);
 
         var propertiesNode = document.getElementById("properties");
         removeAllChildren(propertiesNode);
@@ -109,7 +138,7 @@ h4 { background-color: lightblue; }
 {% endblock %}
 
 {% block content %}
-<div id="debug" style="display:none">Debug</div>
+<div id="debug" style="display:block">Debug</div>
 
 <div class="w3-row">
     <h4>Input</h4>
@@ -155,7 +184,12 @@ h4 { background-color: lightblue; }
 <div class="w3-row">
     <div class="w3-container w3-half">
         <h4>Param Data</h4>
-        <div id="param_data"></div> 
+        <div id="input_form">
+            <form action="/internal/strategy_postback" method="post">
+                <div id="param_data_container"></div>
+                <input type="submit">
+            </form>
+        </div> 
     </div>
 
     <div class="w3-container w3-half">
