@@ -40,8 +40,9 @@ def tradable_data(tradable_name, start_date, end_date):
     return jsonify(json_data)
 
 @app.route('/strategy')
-def strategy():
-    return render_template('strategy.html')
+@app.route('/strategy/<strategy_name>/<start_date>/<end_date>')
+def strategy(strategy_name=None, start_date=None, end_date=None):
+    return render_template('strategy.html', strategy_name=strategy_name, start_date=start_date, end_date=end_date)
 
 @app.route('/internal/strategy_postback', methods=['GET', 'POST'])
 def test_action():

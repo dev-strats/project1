@@ -11,15 +11,34 @@ h4 { background-color: lightblue; }
 
     window.onload = init;
     function init() {
-        var jsonData = $.ajax({
-            url: "/internal/strategy_types",
-            dataType: "json",
-            async: false
-        }).responseText;
+        // document.getElementById("debug").innerHTML = "strategy_name = None";
 
-        var strategyTypeNode = document.getElementById("strategy_type_select");
-        addSelectList(strategyTypeNode, JSON.parse(jsonData));
-        updateStrategyNames();
+        if ("{{strategy_name}}" == "None") {
+
+            var jsonData = $.ajax({
+                url: "/internal/strategy_types",
+                dataType: "json",
+                async: false
+            }).responseText;
+    
+            var strategyTypeNode = document.getElementById("strategy_type_select");
+            addSelectList(strategyTypeNode, JSON.parse(jsonData));
+            updateStrategyNames();
+
+        } else {
+            var jsonData = $.ajax({
+                url: "/internal/tradable/{{strategy_name}}/{{start_date}}/{{end_date}}",
+                dataType: "json",
+                async: false
+            }).responseText;
+            var obj = JSON.parse(jsonData);
+
+            var strategyTypeNode = document.getElementById("strategy_type_select");
+            addSelectList(strategyTypeNode, [obj.properties.type] );
+            var strategyNameNode = document.getElementById("strategy_name_select");
+            addSelectList(strategyNameNode, [obj.properties.name]);
+            updateStrategyDetails(obj);
+        }
     }
 
     function updateStrategyNames() {
@@ -33,7 +52,7 @@ h4 { background-color: lightblue; }
         var strategyNameNode = document.getElementById("strategy_name_select");
         removeAllChildren(strategyNameNode);
         addSelectList(strategyNameNode, JSON.parse(jsonData));
-        updateStrategyDetails();
+        requestTracableDetails();
     }
 
     function removeAllChildren(node) {
@@ -51,7 +70,7 @@ h4 { background-color: lightblue; }
         }
     }
 
-    function addTable(node, data, editable) {
+    function addTable(node, data, editable, linkable) {
         for (var key in data) {
             if (data.hasOwnProperty(key)) {
                 var div1 = document.createElement('div');
@@ -59,12 +78,20 @@ h4 { background-color: lightblue; }
                 node.appendChild(div1);
 
                 var div2 = document.createElement('div');
-                div2.className = 'w3-container w3-third';
-                div2.innerText = key.replace(/_/g, " ") + ':';
+                div2.className = 'w3-container w3-half';
+                if (linkable) {
+                    linkNode = document.createElement('a');
+                    linkNode.href = "/strategy/" + key + "/" + $('#fromDate').val() + "/" + $('#toDate').val();
+                    linkNode.innerText = key + ":";
+                    linkNode.target = "_blank";
+                    div2.appendChild(linkNode);
+                } else {
+                    div2.innerText = key.replace(/_/g, " ") + ":";
+                }
                 div1.appendChild(div2);
 
                 var div3 = document.createElement('div');
-                div3.className = 'w3-container w3-twothird';
+                div3.className = 'w3-container w3-half';
                 if (editable)
                 {
                     var input = document.createElement("input");
@@ -89,7 +116,7 @@ h4 { background-color: lightblue; }
         }
     }
     
-    function updateStrategyDetails() {
+    function requestTracableDetails() {
         var jsonData = $.ajax({
             url: "/internal/tradable/" + $('#strategy_name_select').val() + "/" + $('#fromDate').val() + "/" + $('#toDate').val(),
             dataType: "json",
@@ -99,17 +126,25 @@ h4 { background-color: lightblue; }
         var obj = JSON.parse(jsonData);
         // document.getElementById("debug").innerHTML = obj;
 
+        updateStrategyDetails(obj);
+    }
+
+    function updateStrategyDetails(obj) {
         var paramDataNode = document.getElementById("param_data_container");
         removeAllChildren(paramDataNode);
-        addTable(paramDataNode, obj.param_data, true);
+        addTable(paramDataNode, obj.param_data, true, false);
 
         var propertiesNode = document.getElementById("properties");
         removeAllChildren(propertiesNode);
-        addTable(propertiesNode, obj.properties, false);
+        addTable(propertiesNode, obj.properties, false, false);
+
+        var childStrategyNode = document.getElementById("child_strategies");
+        removeAllChildren(childStrategyNode);
+        addTable(childStrategyNode, obj.children_strategies, false, true);
 
         var statisticsNode = document.getElementById("statistics");
         removeAllChildren(statisticsNode);
-        addTable(statisticsNode, obj.stats, false);
+        addTable(statisticsNode, obj.stats, false, false);
 
         // Create our data table out of JSON data loaded from server.
         var data = new google.visualization.DataTable(JSON.stringify(obj.values));
@@ -126,11 +161,13 @@ h4 { background-color: lightblue; }
 {% endblock %}
 
 {% block content %}
-<div id="debug" style="display:block">Debug</div>
+<div id="debug" style="display:block">
+    Debug: 
+</div>
 
 <div class="w3-row">
-    <h4>Input</h4>
     <div class="w3-container w3-half">
+        <h4>Input</h4>
         <div class="w3-row">
             <div class="w3-container w3-third">
                 Strategy Type:
@@ -144,45 +181,57 @@ h4 { background-color: lightblue; }
                 Name:
             </div>
             <div class="w3-container w3-twothird">
-                <select id="strategy_name_select" onchange="updateStrategyDetails()"></select>
+                <select id="strategy_name_select" onchange="requestTracableDetails()"></select>
             </div>
         </div>
-    </div>
-
-    <div class="w3-container w3-half">
         <div class="w3-row">
-            <div class="w3-container w3-quarter">
+            <div class="w3-container w3-third">
                 From:
             </div>
-            <div class="w3-container w3-threequarter">
-                <input type="text" id="fromDate" value="2018-08-01" onchange="updateStrategyDetails()">
+            <div class="w3-container w3-twothird">
+                {% if start_date %}
+                    <input type="date" id="fromDate" value="{{start_date}}" onchange="requestTracableDetails()">
+                {% else %}
+                    <input type="date" id="fromDate" value="2018-08-01" onchange="requestTracableDetails()">
+                {% endif %}
             </div>
         </div>
         <div class="w3-row">
-            <div class="w3-container w3-quarter">
+            <div class="w3-container w3-third">
                 To:
             </div>
-            <div class="w3-container w3-threequarter">
-                <input type="text" id="toDate" value="2018-08-31" onchange="updateStrategyDetails()">
+            <div class="w3-container w3-twothird">
+                {% if end_date %}
+                    <input type="date" id="toDate" value="{{end_date}}" onchange="requestTracableDetails()">
+                {% else %}
+                    <input type="date" id="toDate" value="2018-08-31" onchange="requestTracableDetails()">
+                {% endif %}
             </div>
         </div>
-    </div>
-</div>
 
-<div class="w3-row">
+    </div>
+
     <div class="w3-container w3-half">
         <h4>Param Data</h4>
         <div id="input_form">
             <form action="/internal/strategy_postback" method="post">
                 <div id="param_data_container"></div>
+                <br/>
                 <input type="submit">
             </form>
         </div> 
     </div>
+</div>
 
+<div class="w3-row">
     <div class="w3-container w3-half">
         <h4>Properties</h4>
         <div id="properties"></div> 
+    </div>
+
+    <div class="w3-container w3-half">
+        <h4>Child Strategies</h4>
+        <div id="child_strategies"></div> 
     </div>
 </div>
 
