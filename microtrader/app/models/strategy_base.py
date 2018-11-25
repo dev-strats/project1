@@ -2,7 +2,7 @@ from .tradable_base import TradableBase,TradableManager
 import app.utils.math_funcs as math_funcs
 
 class StrategyBase(TradableBase):
-    def __init__(self, name, start_date, ccy):
+    def __init__(self, name, ccy, start_date):
         TradableBase.__init__(self, name, ccy)
 
         #properties apply for real strategy

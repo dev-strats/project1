@@ -49,4 +49,20 @@ def test_action():
     # request.args: the key/value pairs in the URL query string
     # request.form: the key/value pairs in the body, from a HTML post form, or JavaScript request that isn't JSON encoded
     data = request.form.to_dict(flat=False)
+
+    # this is tempoary code:
+    # the str to float func can be a generic pre-process step before send to model api ?
+    # the hard-coded strategy need to be linked to the real "current" strategy..
+    # tested that the api persist the data - however how do we refresh the page automatically.
+
+    def is_number(x):
+        try:
+            float(x)
+            return True
+        except:
+            return False
+
+    data = {k:float(v[0]) if is_number(v[0]) else v[0] for (k,v) in data.items()}
+    strategy = TradableManager.get_tradable_by_name("Vol_Target_on_Rolling_Future_001")
+    strategy.update(**data)
     return str(data)
