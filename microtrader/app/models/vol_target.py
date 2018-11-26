@@ -5,17 +5,15 @@ import math
 import pandas as pd
 
 class VolTarget(StrategyBase):
-    def __init__(self,
-        name,
-        underlying_strategy_name,
-        cap,
-        target,
-        start_date):
-
+    def update(self,**kwargs):
+        underlying_strategy_name = kwargs["underlying_strategy_name"]
+        cap = kwargs["cap"]
+        target = kwargs["target"]
         underlying_strategy = TradableManager.get_tradable_by_name(underlying_strategy_name)
-        StrategyBase.__init__(self,name,start_date, underlying_strategy.ccy)
+
         # calc initial ratio
         init_ratio = min(cap,1)
+        start_date = self.start_date
         underlying_price = underlying_strategy.get_values(start_date,start_date)[start_date]
         self.children_strategies[underlying_strategy_name] = init_ratio/underlying_price
         self.children_strategies[underlying_strategy.ccy] = 1-init_ratio
@@ -23,6 +21,14 @@ class VolTarget(StrategyBase):
         self.param_data['target'] = target
         self.param_data['beta'] = 0.8 # think how to set this.
         self.param_data['cap'] = cap
+
+    def __init__(self,
+        name,
+        ccy,
+        start_date,
+        **kwargs):
+        StrategyBase.__init__(self,name,ccy,start_date)
+        self.update(**kwargs)
 
     def get_values(self,start_date,end_date):
         if start_date < self.start_date:
