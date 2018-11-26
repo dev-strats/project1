@@ -1,5 +1,6 @@
 from flask import render_template, flash, redirect, jsonify, request
 from app import app
+from datetime import datetime, timedelta
 import pandas as pd
 from .models.tradable_base import TradableManager
 from .utils import converter
@@ -40,8 +41,12 @@ def tradable_data(tradable_name, start_date, end_date):
     return jsonify(json_data)
 
 @app.route('/strategy')
+@app.route('/strategy/<strategy_name>')
 @app.route('/strategy/<strategy_name>/<start_date>/<end_date>')
 def strategy(strategy_name=None, start_date=None, end_date=None):
+    if strategy_name is not None and start_date is None:
+        start_date = datetime.today() - timedelta(months = -1)  # Default 1M
+        end_date = datetime.today().strftime("%Y-%m-%d")
     return render_template('strategy.html', strategy_name=strategy_name, start_date=start_date, end_date=end_date)
 
 @app.route('/internal/strategy_postback', methods=['GET', 'POST'])

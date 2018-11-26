@@ -5,14 +5,11 @@
 h4 { background-color: lightblue; }
 </style>
 
-<script type="text/javascript">
+<script>
     google.charts.load('current', {'packages':['corechart']});
-    // google.charts.setOnLoadCallback(function() { drawChart(10) });
 
     window.onload = init;
     function init() {
-        // document.getElementById("debug").innerHTML = "strategy_name = None";
-
         if ("{{strategy_name}}" == "None") {
 
             var jsonData = $.ajax({
@@ -80,8 +77,13 @@ h4 { background-color: lightblue; }
                 var div2 = document.createElement('div');
                 div2.className = 'w3-container w3-half';
                 if (linkable) {
-                    linkNode = document.createElement('a');
-                    linkNode.href = "/strategy/" + key + "/" + $('#fromDate').val() + "/" + $('#toDate').val();
+                    var today = new Date();
+                    today.setDate(20);  // Temporary fix
+                    var fromDate = new Date();
+                    fromDate.setMonth(fromDate.getMonth() - 1);
+                
+                    var linkNode = document.createElement('a');
+                    linkNode.href = "/strategy/" + key + "/"  + convertDateToString(fromDate) + "/" + convertDateToString(today);
                     linkNode.innerText = key + ":";
                     linkNode.target = "_blank";
                     div2.appendChild(linkNode);
@@ -115,17 +117,35 @@ h4 { background-color: lightblue; }
             }
         }
     }
-    
-    function requestTracableDetails() {
+
+    function requestTracableDetails(period = '1M') {
+        var today = new Date()
+        today.setDate(20)   // Temporary fix
+        var fromDate = new Date();
+        switch(period) {
+            case '1M':
+                fromDate.setMonth(fromDate.getMonth() - 1);
+                break;
+            case '6M':
+                fromDate.setMonth(fromDate.getMonth() - 6);
+                break;
+            case '1Y':
+                fromDate.setFullYear(fromDate.getFullYear() - 1);
+                break;
+            case 'All':
+                fromDate.setFullYear(fromDate.getFullYear() - 50);
+                break;
+        }
+        document.getElementById("debug").innerHTML = convertDateToString(today) + ' / ' + period + ' / ' + convertDateToString(fromDate);
+
         var jsonData = $.ajax({
-            url: "/internal/tradable/" + $('#strategy_name_select').val() + "/" + $('#fromDate').val() + "/" + $('#toDate').val(),
+            url: "/internal/tradable/" + $('#strategy_name_select').val() + "/" + convertDateToString(fromDate) + "/" + convertDateToString(today),
             dataType: "json",
             async: false
         }).responseText;
 
         var obj = JSON.parse(jsonData);
-        // document.getElementById("debug").innerHTML = obj;
-
+       
         updateStrategyDetails(obj);
     }
 
@@ -154,7 +174,7 @@ h4 { background-color: lightblue; }
           legend: { position: 'top' }
         };
         
-        chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
         chart.draw(data, options);
     }
 </script>
@@ -184,31 +204,6 @@ h4 { background-color: lightblue; }
                 <select id="strategy_name_select" onchange="requestTracableDetails()"></select>
             </div>
         </div>
-        <div class="w3-row">
-            <div class="w3-container w3-third">
-                From:
-            </div>
-            <div class="w3-container w3-twothird">
-                {% if start_date %}
-                    <input type="date" id="fromDate" value="{{start_date}}" onchange="requestTracableDetails()">
-                {% else %}
-                    <input type="date" id="fromDate" value="2018-08-01" onchange="requestTracableDetails()">
-                {% endif %}
-            </div>
-        </div>
-        <div class="w3-row">
-            <div class="w3-container w3-third">
-                To:
-            </div>
-            <div class="w3-container w3-twothird">
-                {% if end_date %}
-                    <input type="date" id="toDate" value="{{end_date}}" onchange="requestTracableDetails()">
-                {% else %}
-                    <input type="date" id="toDate" value="2018-08-31" onchange="requestTracableDetails()">
-                {% endif %}
-            </div>
-        </div>
-
     </div>
 
     <div class="w3-container w3-half">
@@ -238,6 +233,18 @@ h4 { background-color: lightblue; }
 <div class="w3-row" style="margin-top:20px">
     <div class="w3-container w3-half">
         <h4>Rolling Future Price ($)</h4>
+
+        <div>
+            <input type="radio" name="radioPeriod" id="radio1M" onchange="requestTracableDetails('1M');">
+            <label for="radio1M">1M</label>
+            <input type="radio" name="radioPeriod" id="radio6M" onchange="requestTracableDetails('6M');">
+            <label for="radio6M">6M</label>
+            <input type="radio" name="radioPeriod" id="radio1Y" onchange="requestTracableDetails('1Y');">
+            <label for="radio1Y">1Y</label>
+            <input type="radio" name="radioPeriod" id="radioAll" onchange="requestTracableDetails('All');">
+            <label for="radioAll">All</label>
+        </div>
+
         <div id="curve_chart"></div>
     </div>
     <div class="w3-container w3-half">
