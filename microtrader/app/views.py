@@ -1,6 +1,7 @@
 from flask import render_template, flash, redirect, jsonify, request
 from app import app
 from datetime import datetime, timedelta
+import dateutil
 import pandas as pd
 from .models.tradable_base import TradableManager
 from .utils import converter
@@ -53,21 +54,21 @@ def strategy(strategy_name=None, start_date=None, end_date=None):
 def test_action():
     # request.args: the key/value pairs in the URL query string
     # request.form: the key/value pairs in the body, from a HTML post form, or JavaScript request that isn't JSON encoded
-    data = request.form.to_dict(flat=False)
+    data = request.form.to_dict(flat=True)
 
-    # this is tempoary code:
-    # the str to float func can be a generic pre-process step before send to model api ?
-    # the hard-coded strategy need to be linked to the real "current" strategy..
-    # tested that the api persist the data - however how do we refresh the page automatically.
+    strategy = TradableManager.get_tradable_by_name(data['strategy_name'])
+    param_data = strategy.get_param_data()
 
-    def is_number(x):
-        try:
-            float(x)
-            return True
-        except:
-            return False
+    for key in param_data:
+        valueType = type(param_data[key])
+        if valueType is str:
+            param_data[key] = data[key]
+        elif valueType is int:
+            param_data[key] = int(data[key])
+        elif valueType is float:
+            param_data[key] = float(data[key])
+        elif valueType is datetime:
+            param_data[key] = dateutil.parser.parse(data[key])
 
-    data = {k:float(v[0]) if is_number(v[0]) else v[0] for (k,v) in data.items()}
-    strategy = TradableManager.get_tradable_by_name("Vol_Target_on_Rolling_Future_001")
-    strategy.update(**data)
-    return str(data)
+    strategy.update(**param_data)
+    return str(param_data)

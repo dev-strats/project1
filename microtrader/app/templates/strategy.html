@@ -29,12 +29,13 @@ h4 { background-color: lightblue; }
                 async: false
             }).responseText;
             var obj = JSON.parse(jsonData);
-
+        
             var strategyTypeNode = document.getElementById("strategy_type_select");
             addSelectList(strategyTypeNode, [obj.properties.type] );
             var strategyNameNode = document.getElementById("strategy_name_select");
             addSelectList(strategyNameNode, [obj.properties.name]);
             updateStrategyDetails(obj);
+            document.getElementById("hidden_strategy_name").value = "{{strategy_name}}";
         }
     }
 
@@ -78,7 +79,6 @@ h4 { background-color: lightblue; }
                 div2.className = 'w3-container w3-half';
                 if (linkable) {
                     var today = new Date();
-                    today.setDate(20);  // Temporary fix
                     var fromDate = new Date();
                     fromDate.setMonth(fromDate.getMonth() - 1);
                 
@@ -120,7 +120,6 @@ h4 { background-color: lightblue; }
 
     function requestTracableDetails(period = '1M') {
         var today = new Date()
-        today.setDate(20)   // Temporary fix
         var fromDate = new Date();
         switch(period) {
             case '1M':
@@ -136,8 +135,8 @@ h4 { background-color: lightblue; }
                 fromDate.setFullYear(fromDate.getFullYear() - 50);
                 break;
         }
-        document.getElementById("debug").innerHTML = convertDateToString(today) + ' / ' + period + ' / ' + convertDateToString(fromDate);
 
+        document.getElementById("debug").innerHTML = convertDateToString(today) + ' / ' + period + ' / ' + convertDateToString(fromDate);
         var jsonData = $.ajax({
             url: "/internal/tradable/" + $('#strategy_name_select').val() + "/" + convertDateToString(fromDate) + "/" + convertDateToString(today),
             dataType: "json",
@@ -147,6 +146,7 @@ h4 { background-color: lightblue; }
         var obj = JSON.parse(jsonData);
        
         updateStrategyDetails(obj);
+        document.getElementById("hidden_strategy_name").value = $('#strategy_name_select').val();
     }
 
     function updateStrategyDetails(obj) {
@@ -210,6 +210,7 @@ h4 { background-color: lightblue; }
         <h4>Param Data</h4>
         <div id="input_form">
             <form action="/internal/strategy_postback" method="post">
+                <input type="hidden" id="hidden_strategy_name" name="strategy_name" value="" />
                 <div id="param_data_container"></div>
                 <br/>
                 <input type="submit">
