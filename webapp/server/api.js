@@ -5,7 +5,7 @@ const router = new express.Router();
 // get list
 router.get('/get-list', (req, res) => {
 	let name = req.query.name;
-	const strategiesList = require(`../public/json/${name}-list.json`);
+	const strategiesList = require('../public/json/${name}-list.json');
   	res.status(200).json(strategiesList);
 });
 

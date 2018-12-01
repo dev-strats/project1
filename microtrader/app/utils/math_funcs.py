@@ -44,10 +44,13 @@ def apply_f_on_dict(dict1, f):
     return ret
 
 def get_max_draw_down(pd_series, start_date, end_date):
-    highest_level = pd_series[start_date]
+    # to be robust on start_date, end_date being holidays
+    pd_series_1 = pd_series[start_date:end_date]
+
+    highest_level = pd_series_1[0]
     current_max_draw_down = 0
 
-    for date in pd_series.index:
+    for date in pd_series_1.index:
         if (pd_series[date] - highest_level) / highest_level < current_max_draw_down:
             current_max_draw_down = (pd_series[date] - highest_level) / highest_level
         elif pd_series[date] > highest_level:
@@ -65,6 +68,8 @@ def get_vol(pd_series, start_date, end_date):
     return vol
 
 def get_return(pd_series, start_date, end_date):
-    return (pd_series[end_date] - pd_series[start_date])/pd_series[start_date]
+    # to be robust on start_date, end_date being holidays
+    pd_series_1 = pd_series[start_date:end_date]
+    return (pd_series_1[-1] - pd_series_1[0])/pd_series_1[0]
 
 
