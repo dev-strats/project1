@@ -57,7 +57,7 @@ def test_action():
     data = request.form.to_dict(flat=True)
 
     strategy = TradableManager.get_tradable_by_name(data['strategy_name'])
-    param_data = strategy.get_param_data()
+    param_data = strategy.get_param_data_json()
 
     for key in param_data:
         valueType = type(param_data[key])

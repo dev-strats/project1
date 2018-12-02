@@ -9,17 +9,22 @@ class VolTarget(StrategyBase):
         underlying_strategy_name = kwargs["underlying_strategy_name"]
         cap = kwargs["cap"]
         target = kwargs["target"]
+        beta = kwargs["beta"]
+
+        if "start_date" in kwargs:
+            self.start_date = pd.to_datetime(kwargs["start_date"])
+
+        start_date = self.start_date
         underlying_strategy = TradableManager.get_tradable_by_name(underlying_strategy_name)
 
         # calc initial ratio
         init_ratio = min(cap,1)
-        start_date = self.start_date
         underlying_price = underlying_strategy.get_values(start_date,start_date)[start_date]
         self.children_strategies[underlying_strategy_name] = init_ratio/underlying_price
         self.children_strategies[underlying_strategy.ccy] = 1-init_ratio
         self.param_data['underlying_strategy_name'] = underlying_strategy_name
         self.param_data['target'] = target
-        self.param_data['beta'] = 0.8 # think how to set this.
+        self.param_data['beta'] = beta
         self.param_data['cap'] = cap
 
     def __init__(self,

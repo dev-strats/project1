@@ -31,6 +31,9 @@ class TradableBase():
     def get_param_data(self):
         return self.param_data
 
+    def get_param_data_json(self):
+        return self.param_data
+
     def get_values(self,start_date,end_date):
         return None
 
@@ -65,7 +68,7 @@ class TradableBase():
         if start_end_date == None:
             return {
                         "properties"    : self.get_properties(),
-                        "param_data"    : self.get_param_data(),
+                        "param_data"    : self.get_param_data_json(),
                         "values"        : self.get_values_json_all(),
                         "stats"         : self.get_values_all_stats(),
                     }
@@ -73,7 +76,7 @@ class TradableBase():
             (start_date, end_date) = start_end_date
             return {
                         "properties"    : self.get_properties(),
-                        "param_data"    : self.get_param_data(),
+                        "param_data"    : self.get_param_data_json(),
                         "values"        : self.get_values_json(start_date,end_date),
                         "stats"         : self.get_values_stats(start_date,end_date),
                     }
