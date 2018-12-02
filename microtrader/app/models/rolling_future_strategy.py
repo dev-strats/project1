@@ -14,6 +14,9 @@ class RollingFutureStrategy(StrategyBase):
         self.param_data["ticker_type"] = ticker_type
         self.param_data["initial_contract"] = initial_contract
 
+        if "start_date" in kwargs:
+            self.start_date = pd.to_datetime(kwargs["start_date"])
+
     def __init__(self, name, ccy, start_date, **kwargs):
         StrategyBase.__init__(self, name, ccy, start_date)
         self.update(**kwargs)
