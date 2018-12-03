@@ -24,7 +24,7 @@ h4 { background-color: lightblue; }
 
         } else {
             var jsonData = $.ajax({
-                url: "/internal/tradable/{{strategy_name}}/{{start_date}}/{{end_date}}",
+                url: "/internal/tradable/{{strategy_name}}/{{from_date}}/{{to_date}}",
                 dataType: "json",
                 async: false
             }).responseText;
@@ -132,11 +132,13 @@ h4 { background-color: lightblue; }
                 fromDate.setFullYear(fromDate.getFullYear() - 1);
                 break;
             case 'All':
-                fromDate.setFullYear(fromDate.getFullYear() - 50);
+                var paramDataNode = document.getElementById("param_data_container");
+                var startDateNode = paramDataNode.querySelector('input[name="start_date"]')
+                fromDate = new Date(startDateNode.value);
                 break;
         }
 
-        document.getElementById("debug").innerHTML = convertDateToString(today) + ' / ' + period + ' / ' + convertDateToString(fromDate);
+        // document.getElementById("debug").innerHTML = convertDateToString(fromDate) + ' / ' + period + ' / ' + convertDateToString(today);
         var jsonData = $.ajax({
             url: "/internal/tradable/" + $('#strategy_name_select').val() + "/" + convertDateToString(fromDate) + "/" + convertDateToString(today),
             dataType: "json",

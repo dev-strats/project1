@@ -19,8 +19,8 @@ class StrategyBase(TradableBase):
         param_data['start_date'] = self.start_date.to_pydatetime().strftime("%Y-%m-%d")
         return param_data
 
-    def to_json(self, start_end_date=None):
-        data = TradableBase.to_json(self, start_end_date=start_end_date)
+    def to_json(self, from_to_date=None):
+        data = TradableBase.to_json(self, from_to_date=from_to_date)
         data["children_strategies"] = self.children_strategies
         return data
 

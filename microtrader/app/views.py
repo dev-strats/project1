@@ -1,6 +1,7 @@
 from flask import render_template, flash, redirect, jsonify, request
 from app import app
 from datetime import datetime, timedelta
+from dateutil.relativedelta import *
 import dateutil
 import pandas as pd
 from .models.tradable_base import TradableManager
@@ -29,26 +30,26 @@ def strategy_names(type_name):
     ret = TradableManager.get_all_strategy_names_by_type(type_name)
     return jsonify(ret)
 
-@app.route('/internal/tradable/<tradable_name>/<start_date>/<end_date>')
-def tradable_data(tradable_name, start_date, end_date):
-    start_date = pd.to_datetime(start_date)
-    end_date = pd.to_datetime(end_date)
+@app.route('/internal/tradable/<tradable_name>/<from_date>/<to_date>')
+def tradable_data(tradable_name, from_date, to_date):
+    from_date = pd.to_datetime(from_date)
+    to_date = pd.to_datetime(to_date)
 
     tradable = TradableManager.get_tradable_by_name(tradable_name)
-    tradable.get_values(start_date, end_date)
-    json_data = tradable.to_json(start_end_date=(start_date,end_date))
+    tradable.get_values(from_date, to_date)
+    json_data = tradable.to_json(from_to_date=(from_date, to_date))
     json_data["values"] = converter.covert_price_to_gdata(json_data["values"])
 
     return jsonify(json_data)
 
 @app.route('/strategy')
 @app.route('/strategy/<strategy_name>')
-@app.route('/strategy/<strategy_name>/<start_date>/<end_date>')
-def strategy(strategy_name=None, start_date=None, end_date=None):
-    if strategy_name is not None and start_date is None:
-        start_date = datetime.today() - timedelta(months = -1)  # Default 1M
-        end_date = datetime.today().strftime("%Y-%m-%d")
-    return render_template('strategy.html', strategy_name=strategy_name, start_date=start_date, end_date=end_date)
+@app.route('/strategy/<strategy_name>/<from_date>/<to_date>')
+def strategy(strategy_name=None, from_date=None, to_date=None):
+    if strategy_name is not None and from_date is None:
+        from_date = datetime.today() + relativedelta(months = -1)  # Default 1M
+        to_date = datetime.today().strftime("%Y-%m-%d")
+    return render_template('strategy.html', strategy_name=strategy_name, from_date=from_date, to_date=to_date)
 
 @app.route('/internal/strategy_postback', methods=['GET', 'POST'])
 def test_action():
@@ -56,7 +57,8 @@ def test_action():
     # request.form: the key/value pairs in the body, from a HTML post form, or JavaScript request that isn't JSON encoded
     data = request.form.to_dict(flat=True)
 
-    strategy = TradableManager.get_tradable_by_name(data['strategy_name'])
+    strategy_name = data['strategy_name']
+    strategy = TradableManager.get_tradable_by_name(strategy_name)
     param_data = strategy.get_param_data_json()
 
     for key in param_data:
@@ -71,4 +73,5 @@ def test_action():
             param_data[key] = dateutil.parser.parse(data[key])
 
     strategy.update(**param_data)
-    return str(param_data)
+    # return str(param_data)
+    return redirect('/strategy/' + strategy_name)

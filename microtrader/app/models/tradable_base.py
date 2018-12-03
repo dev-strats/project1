@@ -63,9 +63,9 @@ class TradableBase():
         return [[x.to_pydatetime().strftime("%Y-%m-%d"),y] for (x,y) in zip(self.values.index.tolist(), self.values.tolist())]
 
     # this function has to be named as "to_json" to make the jsonify or other stand json api work for the class.
-    # start_end_date is either None or a tuple of two dates
-    def to_json(self, start_end_date = None):
-        if start_end_date == None:
+    # from_to_date is either None or a tuple of two dates
+    def to_json(self, from_to_date = None):
+        if from_to_date == None:
             return {
                         "properties"    : self.get_properties(),
                         "param_data"    : self.get_param_data_json(),
@@ -73,12 +73,12 @@ class TradableBase():
                         "stats"         : self.get_values_all_stats(),
                     }
         else:
-            (start_date, end_date) = start_end_date
+            (from_date, to_date) = from_to_date
             return {
                         "properties"    : self.get_properties(),
                         "param_data"    : self.get_param_data_json(),
-                        "values"        : self.get_values_json(start_date,end_date),
-                        "stats"         : self.get_values_stats(start_date,end_date),
+                        "values"        : self.get_values_json(from_date, to_date),
+                        "stats"         : self.get_values_stats(from_date, to_date),
                     }
 
     def save_to_file(self):
