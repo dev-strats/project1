@@ -21,7 +21,17 @@ class StrategyBase(TradableBase):
 
     def to_json(self, from_to_date=None):
         data = TradableBase.to_json(self, from_to_date=from_to_date)
-        data["children_strategies"] = self.children_strategies
+        children_strategies = self.children_strategies
+        real_strategies = {}
+        real_data = {}
+        for strategy_name in children_strategies:
+            strategy = TradableManager.get_tradable_by_name(strategy_name)
+            if strategy.is_strategy():
+                real_strategies[strategy_name] = children_strategies[strategy_name]
+            else:
+                real_data[strategy_name] = children_strategies[strategy_name]
+
+        data["children_strategies"] = {"children_strategies": real_strategies, "children_data": real_data}
         return data
 
     def get_portfolio(self):

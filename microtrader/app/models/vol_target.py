@@ -68,6 +68,7 @@ class VolTarget(StrategyBase):
 
         self.values = pd.Series(values,index=realized_variance.index)
         pd_series = self.values[start_date:end_date]
+        self.children_strategies = {self.param_data["underlying_strategy_name"]:lev*value/underlying_prices[date], self.ccy:(1-lev)*value}
         return pd_series
 
 

@@ -50,6 +50,7 @@ class RollingFutureStrategy(StrategyBase):
             ret_values.append(roll_fees + contract_obj.get_values(date_iter,date_iter)[0])
 
         self.values = pd.Series(ret_values, index=bdays)
+        self.children_strategies = {}
         self.children_strategies[contract_obj.name] = 1
         self.children_strategies[contract_obj.ccy] = roll_fees
         return self.values
