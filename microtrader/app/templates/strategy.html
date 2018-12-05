@@ -24,7 +24,7 @@ h4 { background-color: lightblue; }
 
         } else {
             var jsonData = $.ajax({
-                url: "/internal/tradable/{{strategy_name}}/{{from_date}}/{{to_date}}",
+                url: "/internal/tradable/" + escapeSlash("{{strategy_name}}") + "/{{from_date}}/{{to_date}}",
                 dataType: "json",
                 async: false
             }).responseText;
@@ -83,7 +83,7 @@ h4 { background-color: lightblue; }
                     fromDate.setMonth(fromDate.getMonth() - 1);
                 
                     var linkNode = document.createElement('a');
-                    linkNode.href = "/strategy/" + key + "/"  + convertDateToString(fromDate) + "/" + convertDateToString(today);
+                    linkNode.href = "/strategy/" + escapeSlash(key) + "/"  + convertDateToString(fromDate) + "/" + convertDateToString(today);
                     linkNode.innerText = key + ":";
                     linkNode.target = "_blank";
                     div2.appendChild(linkNode);
@@ -119,6 +119,10 @@ h4 { background-color: lightblue; }
     }
 
     function requestTracableDetails(period = '1M') {
+        var startDate = (period == '1M') ? 
+                        new Date() :
+                        new Date(document.getElementById("param_data_container").querySelector('input[name="start_date"]').value);
+
         var today = new Date()
         var fromDate = new Date();
         switch(period) {
@@ -132,15 +136,18 @@ h4 { background-color: lightblue; }
                 fromDate.setFullYear(fromDate.getFullYear() - 1);
                 break;
             case 'All':
-                var paramDataNode = document.getElementById("param_data_container");
-                var startDateNode = paramDataNode.querySelector('input[name="start_date"]')
-                fromDate = new Date(startDateNode.value);
+                fromDate = startDate;
                 break;
+        }
+        if (period != '1M' && period != 'All') {
+            if (fromDate < startDate) {
+                fromDate = startDate;
+            }
         }
 
         // document.getElementById("debug").innerHTML = convertDateToString(fromDate) + ' / ' + period + ' / ' + convertDateToString(today);
         var jsonData = $.ajax({
-            url: "/internal/tradable/" + $('#strategy_name_select').val() + "/" + convertDateToString(fromDate) + "/" + convertDateToString(today),
+            url: "/internal/tradable/" + escapeSlash($('#strategy_name_select').val()) + "/" + convertDateToString(fromDate) + "/" + convertDateToString(today),
             dataType: "json",
             async: false
         }).responseText;

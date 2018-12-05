@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, jsonify, request
 from app import app
 from datetime import datetime, timedelta
-from dateutil.relativedelta import *
+from dateutil.relativedelta import relativedelta
 import dateutil
 import pandas as pd
 from .models.tradable_base import TradableManager
@@ -32,8 +32,10 @@ def strategy_names(type_name):
 
 @app.route('/internal/tradable/<tradable_name>/<from_date>/<to_date>')
 def tradable_data(tradable_name, from_date, to_date):
+    tradable_name = converter.revert_slash(tradable_name)
     from_date = pd.to_datetime(from_date)
     to_date = pd.to_datetime(to_date)
+    # print("+++ In tradable_data function: tradable_name = '{}', from_date = {}, to_date = {}".format(tradable_name, from_date, to_date))
 
     tradable = TradableManager.get_tradable_by_name(tradable_name)
     tradable.get_values(from_date, to_date)
@@ -46,6 +48,10 @@ def tradable_data(tradable_name, from_date, to_date):
 @app.route('/strategy/<strategy_name>')
 @app.route('/strategy/<strategy_name>/<from_date>/<to_date>')
 def strategy(strategy_name=None, from_date=None, to_date=None):
+    if strategy_name is not None:
+        strategy_name = converter.revert_slash(strategy_name)
+    # print("*** In strategy function: stratege_name = '{}', from_date = {}, to_date = {}".format(strategy_name, from_date, to_date))
+
     if strategy_name is not None and from_date is None:
         from_date = datetime.today() + relativedelta(months = -1)  # Default 1M
         to_date = datetime.today().strftime("%Y-%m-%d")

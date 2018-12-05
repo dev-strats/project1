@@ -11,3 +11,7 @@ def covert_price_to_gdata(data):
 
     result = {'cols': cols, 'rows': rows}
     return result
+
+# Slash (/) is escaped in strategy.html, so has to be reverted 
+def revert_slash(s):
+    return s.replace('~', '/')
