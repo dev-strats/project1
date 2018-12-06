@@ -169,7 +169,8 @@ h4 { background-color: lightblue; }
 
         var childStrategyNode = document.getElementById("child_strategies");
         removeAllChildren(childStrategyNode);
-        addTable(childStrategyNode, obj.children_strategies, false, true);
+        addTable(childStrategyNode, obj.children_strategies.children_strategies, false, true);
+        addTable(childStrategyNode, obj.children_strategies.children_data, false, false);
 
         var statisticsNode = document.getElementById("statistics");
         removeAllChildren(statisticsNode);
