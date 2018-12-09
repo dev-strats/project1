@@ -41,7 +41,10 @@ class TradableBase():
         ret = math_funcs.get_return(self.values,start_date,end_date)
         vol = math_funcs.get_vol(self.values,start_date,end_date)
         max_draw_down = math_funcs.get_max_draw_down(self.values,start_date,end_date)
-        sharpe_ratio = ret / vol
+        if ret == 0:
+            sharpe_ratio = 0
+        else:
+            sharpe_ratio = ret / vol
 
         return {
             "return":   ret,

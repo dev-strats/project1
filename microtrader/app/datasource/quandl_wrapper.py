@@ -1,12 +1,26 @@
 import quandl
 import pandas as pd
 import datetime
+import os
+import json
+import pickle
 
 quandl.ApiConfig.api_key = 'eAxLue6aGM4kwQcqSHqX'
 db_cache = {}
 
 def get_quandl_data(code):
-    return quandl.get(code)
+    data_dir = r'C:\temp\datadata\\'
+    if os.path.isfile(data_dir + code.replace("/","~") + r'.pkl'):
+        with open(data_dir + code.replace("/","~") + r'.pkl','rb') as outFile:
+            ret = pickle.load(outFile)
+    else:
+        ret = quandl.get(code)
+        if not os.path.exists(data_dir):
+            os.makedirs(data_dir)
+        with open(data_dir + code.replace("/","~") + r'.pkl','wb') as outFile:
+            pickle.dump(ret, outFile,protocol=pickle.HIGHEST_PROTOCOL)
+
+    return ret
 
 def query_data(ticker, ticker_type, start_date, end_date):
     global db_cache

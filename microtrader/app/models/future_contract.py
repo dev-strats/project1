@@ -38,4 +38,6 @@ class FutureContract(DataBase):
         return ret
 
     def get_values(self, start_date, end_date):
-        return qw.query_data(self.ticker, self.ticker_type, start_date, end_date)
+        ret = qw.query_data(self.ticker, self.ticker_type, start_date, end_date)
+        self.values = ret
+        return ret
