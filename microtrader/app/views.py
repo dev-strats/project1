@@ -44,21 +44,25 @@ def tradable_data(tradable_name, from_date, to_date):
 
     return jsonify(json_data)
 
-@app.route('/strategy')
-@app.route('/strategy/<strategy_name>')
-@app.route('/strategy/<strategy_name>/<from_date>/<to_date>')
-def strategy(strategy_name=None, from_date=None, to_date=None):
-    if strategy_name is not None:
-        strategy_name = converter.revert_slash(strategy_name)
-    # print("*** In strategy function: stratege_name = '{}', from_date = {}, to_date = {}".format(strategy_name, from_date, to_date))
+@app.route('/data/<name>/<from_date>/<to_date>')
+def data(name, from_date, to_date):
+    return render_template('tradable.html', tradable_type='data', tradable_name=name, from_date=from_date, to_date=to_date)
 
-    if strategy_name is not None and from_date is None:
+@app.route('/strategy')
+@app.route('/strategy/<name>')
+@app.route('/strategy/<name>/<from_date>/<to_date>')
+def strategy(name=None, from_date=None, to_date=None):
+    if name is not None:
+        name = converter.revert_slash(name)
+    # print("*** In strategy function: name = '{}', from_date = {}, to_date = {}".format(name, from_date, to_date))
+
+    if name is not None and from_date is None:
         from_date = datetime.today() + relativedelta(months = -1)  # Default 1M
         to_date = datetime.today().strftime("%Y-%m-%d")
-    return render_template('strategy.html', strategy_name=strategy_name, from_date=from_date, to_date=to_date)
+    return render_template('tradable.html', tradable_type='strategy', tradable_name=name, from_date=from_date, to_date=to_date)
 
 @app.route('/internal/strategy_postback', methods=['GET', 'POST'])
-def test_action():
+def strategy_postback():
     # request.args: the key/value pairs in the URL query string
     # request.form: the key/value pairs in the body, from a HTML post form, or JavaScript request that isn't JSON encoded
     data = request.form.to_dict(flat=True)
