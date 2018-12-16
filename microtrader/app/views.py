@@ -82,6 +82,15 @@ def strategy_postback():
             param_data[key] = float(data[key])
         elif valueType is datetime:
             param_data[key] = dateutil.parser.parse(data[key])
+        elif valueType is list:
+            valueTypeElement = type(param_data[key][0])
+            real_data = data[key].split(",")
+            if valueTypeElement is str:
+                param_data[key] = real_data
+            elif valueTypeElement is int:
+                param_data[key] = [int(x) for x in real_data]
+            elif valueTypeElement is float:
+                param_data[key] = [float(x) for x in real_data]
 
     strategy.update(**param_data)
     # return str(param_data)

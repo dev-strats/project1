@@ -16,8 +16,9 @@ class TradableManager():
         from .rolling_future_strategy import RollingFutureStrategy
         from .vol_target import VolTarget
 
-        RollingFutureStrategy("dummyRollingFutureStrategy","","","",None)
-        VolTarget("dummyVolTarget","dummyRollingFutureStrategy",0,0,None)
+        # RollingFutureStrategy("dummyRollingFutureStrategy","","","",None)
+        # VolTarget("dummyVolTarget","dummyRollingFutureStrategy",0,0,None)
+        # AssetAllocationInverseVol("dummyAssetAllocationInverseVol",)
 
     @staticmethod
     def load_strategies():
@@ -29,10 +30,23 @@ class TradableManager():
         from .rolling_future_strategy import RollingFutureStrategy
         from .vol_target import VolTarget
         from .cash import Cash
+        from .asset_allocation_inverse_vol import AssetAllocationInverseVol
 
         RollingFutureStrategy("Rolling_Future_001", "USD", pd.to_datetime("2013-04-15"), ticker_root = "ES", ticker_type = "QUANDL", initial_contract = "CME/ESM2013" )
         VolTarget("Vol_Target_on_Rolling_Future_001", "USD", pd.to_datetime("2013-04-15"), underlying_strategy_name = "Rolling_Future_001", cap = 0.8, target = 0.2, beta=0.8)
         Cash("USD")
+        AssetAllocationInverseVol("Asset_Allocation_Inverse_Vol_001", "USD", pd.to_datetime("2013-04-15"),
+                                  underlying_strategies = [
+                                      "Rolling_Future_001",
+                                      "Vol_Target_on_Rolling_Future_001"
+                                  ],
+                                  initial_weights = [
+                                      0.5,
+                                      0.5
+                                  ],
+                                  initial_vol = 0.2,
+                                  beta = 0.8
+        )
 
     @staticmethod
     def get_tradable_by_name(name):
