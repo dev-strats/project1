@@ -47,7 +47,8 @@ h4 { background-color: lightblue; }
                 var strategyNameNode = document.getElementById("strategy_name_select");
                 addSelectList(strategyNameNode, [obj.properties.name]);
                 updateTradableDetails(obj);
-                document.getElementById("hidden_strategy_name").value = "{{strategy_name}}";
+                // changed
+                document.getElementById("hidden_strategy_name").value = "{{tradable_name}}";
             }
         }
     }
