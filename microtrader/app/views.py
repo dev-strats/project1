@@ -68,7 +68,9 @@ def strategy_postback():
     data = request.form.to_dict(flat=True)
 
     strategy_name = data['strategy_name']
-    strategy = TradableManager.get_tradable_by_name(strategy_name)
+    strategy_name_1 = converter.revert_slash(strategy_name)
+    print(strategy_name_1)
+    strategy = TradableManager.get_tradable_by_name(strategy_name_1)
     param_data = strategy.get_param_data_json()
 
     for key in param_data:
