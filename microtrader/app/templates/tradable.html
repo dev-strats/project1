@@ -47,7 +47,6 @@ h4 { background-color: lightblue; }
                 var strategyNameNode = document.getElementById("strategy_name_select");
                 addSelectList(strategyNameNode, [obj.properties.name]);
                 updateTradableDetails(obj);
-                // changed
                 document.getElementById("hidden_strategy_name").value = "{{tradable_name}}";
             }
         }
@@ -99,7 +98,7 @@ h4 { background-color: lightblue; }
                     var linkNode = document.createElement('a');
                     linkNode.href = "/" + linkable + "/" + escapeSlash(key) + "/"  + convertDateToString(fromDate) + "/" + convertDateToString(today);
                     linkNode.innerText = key + ":";
-                    linkNode.target = "_blank";
+                    linkNode.target = "_self"; // "_blank";
                     div2.appendChild(linkNode);
                 } else {
                     div2.innerText = key.replace(/_/g, " ") + ":";
@@ -257,7 +256,11 @@ h4 { background-color: lightblue; }
                 <input type="hidden" id="hidden_strategy_name" name="strategy_name" value="" />
                 <div id="param_data_container"></div>
                 <br/>
-                <input type="submit" id="submit_strategy_param">
+                <div id="param_data_container">
+                    <input type="submit" name="submit_method" value="Submit">
+                    <input type="submit" name="submit_method" value="Save">
+                    <input type="submit" name="submit_method" value="Revert">
+                </div>
             </form>
         </div> 
     </div>

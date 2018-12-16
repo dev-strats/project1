@@ -92,6 +92,9 @@ def strategy_postback():
             elif valueTypeElement is float:
                 param_data[key] = [float(x) for x in real_data]
 
+    submit_method = request.form['submit_method']
+    print("!!! submit_method: " + submit_method)
+
     strategy.update(**param_data)
     # return str(param_data)
     return redirect('/strategy/' + strategy_name)
