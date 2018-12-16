@@ -30,7 +30,7 @@ class TradableManager():
         from .vol_target import VolTarget
         from .cash import Cash
 
-        RollingFutureStrategy("Rolling_Future_001", "USD", pd.to_datetime("2013-04-15"), ticker_root = "ES", ticker_type = "QUANDL", initial_contract = "CME/ESH2013" )
+        RollingFutureStrategy("Rolling_Future_001", "USD", pd.to_datetime("2013-04-15"), ticker_root = "ES", ticker_type = "QUANDL", initial_contract = "CME/ESM2013" )
         VolTarget("Vol_Target_on_Rolling_Future_001", "USD", pd.to_datetime("2013-04-15"), underlying_strategy_name = "Rolling_Future_001", cap = 0.8, target = 0.2, beta=0.8)
         Cash("USD")
 

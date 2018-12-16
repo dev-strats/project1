@@ -25,15 +25,13 @@ class RollingFutureStrategy(StrategyBase):
         # 1. get the contract series - the data is expected to live in database ( for different future, the contract months list should be saved in database).
         init_contract = self.param_data["initial_contract"]
         contract_obj = FutureContract(init_contract, self.param_data["ticker_type"])
-        roll_fees = 0
+        init_ratio = 1/contract_obj.get_values(self.start_date,self.start_date)[0]
+        current_ratio = init_ratio
         # roll all things before the start date
         while contract_obj.param_data["roll_date"] <= start_date:
             next_contract = contract_obj.get_next()
             roll_date = contract_obj.param_data["roll_date"]
-            old_c_price = contract_obj.get_values(roll_date,roll_date)[0]
-            new_c_price = next_contract.get_values(roll_date,roll_date)[0]
-            price_diff = old_c_price - new_c_price
-            roll_fees += price_diff
+            current_ratio *= contract_obj.get_values(roll_date,roll_date)[0]/next_contract.get_values(roll_date,roll_date)[0]
             contract_obj = next_contract
 
         # now on the start date, the contract is up to date.
@@ -43,14 +41,10 @@ class RollingFutureStrategy(StrategyBase):
             if contract_obj.param_data["roll_date"] == date_iter:
                 next_contract = contract_obj.get_next()
                 roll_date = contract_obj.param_data["roll_date"]
-                price_diff = contract_obj.get_values(roll_date,roll_date)[0] - next_contract.get_values(roll_date,roll_date)[0]
-                roll_fees += price_diff
+                current_ratio *= contract_obj.get_values(roll_date,roll_date)[0]/next_contract.get_values(roll_date,roll_date)[0]
                 contract_obj = next_contract
-
-            ret_values.append(roll_fees + contract_obj.get_values(date_iter,date_iter)[0])
+            ret_values.append(current_ratio*contract_obj.get_values(date_iter,date_iter)[0])
 
         self.values = pd.Series(ret_values, index=bdays)
-        self.children_strategies = {}
-        self.children_strategies[contract_obj.name] = 1
-        self.children_strategies[contract_obj.ccy] = roll_fees
+        self.children_strategies = {contract_obj.name : current_ratio}
         return self.values
