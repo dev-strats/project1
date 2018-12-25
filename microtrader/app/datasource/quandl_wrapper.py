@@ -9,7 +9,10 @@ quandl.ApiConfig.api_key = 'eAxLue6aGM4kwQcqSHqX'
 db_cache = {}
 
 def get_quandl_data(code):
-    data_dir = r'C:\temp\datadata\\'
+    data_dir = r'./tmp_data/'
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
+
     data_date_str = datetime.datetime.now().strftime("%Y-%m-%d")
     file_name = code.replace("/","~") + "_" + data_date_str
 
@@ -18,8 +21,6 @@ def get_quandl_data(code):
             ret = pickle.load(outFile)
     else:
         ret = quandl.get(code)
-        if not os.path.exists(data_dir):
-            os.makedirs(data_dir)
         with open(data_dir + file_name + r'.pkl','wb') as outFile:
             pickle.dump(ret, outFile,protocol=pickle.HIGHEST_PROTOCOL)
 
