@@ -12,15 +12,13 @@ class AssetAllocationInverseVol(StrategyBase):
     def update(self, **kwargs):
         beta = kwargs["beta"]
         initial_vol = kwargs["initial_vol"]
-        underlying_strategy_names = kwargs["underlying_strategies"]
         initial_weights = kwargs["initial_weights"]
         if "start_date" in kwargs:
             self.start_date = pd.to_datetime(kwargs["start_date"])
 
-        total_initial_weights = sum(initial_weights)
-        initial_weights = [x/total_initial_weights for x in initial_weights]
+        total_initial_weights = sum(initial_weights.values())
+        initial_weights = {k:initial_weights[k]/total_initial_weights for k in initial_weights}
 
-        self.param_data["underlying_strategies"] = underlying_strategy_names
         self.param_data["initial_weights"] = initial_weights
         self.param_data["beta"] = beta
         self.param_data["initial_vol"] = initial_vol
@@ -29,13 +27,13 @@ class AssetAllocationInverseVol(StrategyBase):
         # need to calculate the state up to the state of start_date.
         # need to set the rebalance date/frequency as param - for now use daily.
 
-        underlying_strategies = self.param_data["underlying_strategies"]
+        underlying_strategies = self.param_data["initial_weights"].keys()
         underlying_prices = {k:TradableManager.get_tradable_by_name(k).get_values(self.start_date,end_date) for k in underlying_strategies}
         realized_variances = {k:math_funcs.realized_variance_exp_decay(underlying_prices[k],self.param_data["beta"],self.param_data["initial_vol"],self.start_date) for k in underlying_prices}
 
         value = 1
         ret_values = []
-        current_weights = {underlying_strategies[i]:self.param_data["initial_weights"][i] for i in range(len(underlying_strategies))}
+        current_weights = {i:self.param_data["initial_weights"][i] for i in underlying_strategies}
         bdays = pd.bdate_range(self.start_date,end_date) # again, should use a standard API to get the business days for this strategy between start and end date
         bdays1 = []
         for date_iter in bdays:

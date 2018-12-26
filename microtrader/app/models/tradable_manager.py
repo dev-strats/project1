@@ -36,14 +36,10 @@ class TradableManager():
         VolTarget("Vol_Target_on_Rolling_Future_001", "USD", pd.to_datetime("2013-04-15"), underlying_strategy_name = "Rolling_Future_001", cap = 0.8, target = 0.2, beta=0.8)
         Cash("USD")
         AssetAllocationInverseVol("Asset_Allocation_Inverse_Vol_001", "USD", pd.to_datetime("2013-04-15"),
-                                  underlying_strategies = [
-                                      "Rolling_Future_001",
-                                      "Vol_Target_on_Rolling_Future_001"
-                                  ],
-                                  initial_weights = [
-                                      0.5,
-                                      0.5
-                                  ],
+                                  initial_weights = {
+                                      "Rolling_Future_001":0.5,
+                                      "Vol_Target_on_Rolling_Future_001":0.5
+                                  },
                                   initial_vol = 0.2,
                                   beta = 0.8
         )
