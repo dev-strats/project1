@@ -107,17 +107,22 @@ h4 { background-color: lightblue; }
 
                 var div3 = document.createElement('div');
                 div3.className = 'w3-container w3-half';
-                if (editable)
-                {
+                var v = data[key];
+                if (editable) {
                     var input = document.createElement("input");
                     input.type = "text";
                     input.name = key;
-                    input.value = data[key];
+                    if (isDict(v)) {
+                        var l = [];
+                        for (var key in v) {
+                            l.push(key + ':' + v[key]);
+                        }
+                        input.value = l.join(',');
+                    } else {
+                        input.value = v;
+                    }
                     div3.appendChild(input);
-                }
-                else
-                {
-                    var v = data[key];
+                } else {
                     if (typeof(v) === 'number')
                         div3.innerText = v.toFixed(5);
                     else if (v instanceof Date)

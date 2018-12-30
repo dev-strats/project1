@@ -6,3 +6,7 @@ function convertDateToString(date) {
 function escapeSlash(s) {
     return s.replace(/\//g, "~");
 }
+
+function isDict(v) {
+    return v !== null && typeof(v) === 'object' && !(v instanceof Array) && !(v instanceof Date);
+}
