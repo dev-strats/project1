@@ -1,6 +1,10 @@
 from .tradable_base import TradableBase
 
-class DataBase(TradableBase): # this is the data object, a special type of tradable.. not the database..
+class DataBase(TradableBase): 
+    """
+    This is the data object, a special type of tradable.. not the database..
+    """
+
     def __init__(self, ticker, ticker_type, ccy):
         # ticker_type is like RIC or BLOOMBERG TICKER or similar, it is different to data source
         # in theory this is to ensure no ambiguition if RIC and BLOOMBERG TICKER coincides for different objects.
@@ -11,7 +15,7 @@ class DataBase(TradableBase): # this is the data object, a special type of trada
         # so the ticker_type here might also refer to datasource.
 
         if ticker_type != "":
-            name = ticker_type+"_"+ticker
+            name = '{}_{}'.format(ticker_type, ticker)
         else:
             name = ticker
         TradableBase.__init__(self, name, ccy)

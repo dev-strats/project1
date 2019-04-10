@@ -15,6 +15,7 @@ class TradableManager():
         # the purpose is to provide the interface to front-end
         from .rolling_future_strategy import RollingFutureStrategy
         from .vol_target import VolTarget
+        from .strategy_short_vxx import StrategyShortVXX
 
         # RollingFutureStrategy("dummyRollingFutureStrategy","","","",None)
         # VolTarget("dummyVolTarget","dummyRollingFutureStrategy",0,0,None)
@@ -27,10 +28,15 @@ class TradableManager():
         # a dummy function to return some tradables
         # this will be replaced by proper load of real positions
 
+        from .index_product import IndexProduct
+        IndexProduct('VIX', 'YAHOO')
+        IndexProduct('VXX', 'YAHOO')
+
         from .rolling_future_strategy import RollingFutureStrategy
         from .vol_target import VolTarget
         from .cash import Cash
         from .asset_allocation_inverse_vol import AssetAllocationInverseVol
+        from .strategy_short_vxx import StrategyShortVXX
 
         RollingFutureStrategy("Rolling_Future_001", "USD", pd.to_datetime("2013-04-15"), ticker_root = "ES", ticker_type = "QUANDL", initial_contract = "CME/ESM2013" )
         VolTarget("Vol_Target_on_Rolling_Future_001", "USD", pd.to_datetime("2013-04-15"), underlying_strategy_name = "Rolling_Future_001", cap = 0.8, target = 0.2, beta=0.8)
@@ -42,6 +48,11 @@ class TradableManager():
                                   },
                                   initial_vol = 0.2,
                                   beta = 0.8
+        )
+        StrategyShortVXX('Strategy_Short_VXX_001', 'USD', pd.to_datetime('2009-01-30'), pd.to_datetime('2019-01-30'),
+                         open_threshold = 25,
+                         close_threshold = 15,
+                         max_vxx_incr_days = 3
         )
 
     @staticmethod
@@ -100,6 +111,7 @@ class TradableManager():
         all_strategies = TradableManager.get_all_strategy_names_by_types()
         return list(all_strategies[type_name].keys())
 
+    @staticmethod
     def get_strategy_param_data(strategy_name):
         strategy = TradableManager.get_tradable_by_name(strategy_name)
         return strategy.get_param_data()

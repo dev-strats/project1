@@ -1,22 +1,27 @@
+from datetime import datetime
+import pandas as pd
 from .tradable_base import TradableBase,TradableManager
 import app.utils.math_funcs as math_funcs
 
 class StrategyBase(TradableBase):
-    def __init__(self, name, ccy, start_date):
+    def __init__(self, name, ccy, start_date, end_date = None):
         TradableBase.__init__(self, name, ccy)
 
-        #properties apply for real strategy
+        # properties apply for real strategy
         self.children_strategies = {}
         self.start_date = start_date
+        self.end_date = datetime.now() if end_date == None else end_date
 
     def get_param_data(self):
         param_data = TradableBase.get_param_data(self)
         param_data['start_date'] = self.start_date
+        param_data['end_date'] = self.end_date
         return param_data
 
     def get_param_data_json(self):
         param_data = TradableBase.get_param_data(self)
-        param_data['start_date'] = self.start_date.to_pydatetime().strftime("%Y-%m-%d")
+        param_data['start_date'] = self.start_date.strftime("%Y-%m-%d")
+        param_data['end_date'] = self.end_date.strftime("%Y-%m-%d")
         return param_data
 
     def to_json(self, from_to_date=None):

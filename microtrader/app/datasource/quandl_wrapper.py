@@ -1,19 +1,24 @@
 import quandl
 import pandas as pd
-import datetime
+from datetime import datetime, timedelta
 import os
 import pickle
 import random
 
 quandl.ApiConfig.api_key = 'eAxLue6aGM4kwQcqSHqX'
-db_cache = {}
 
 def get_quandl_data(code):
+    """
+    Download data from Quandl, saving into pickle file
+
+    Argument: 
+    code: Quandl code (e.g. CME/ESU2013).
+    """
     data_dir = r'./tmp_data/'
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)
 
-    data_date_str = datetime.datetime.now().strftime("%Y-%m-%d")
+    data_date_str = datetime.now().strftime("%Y-%m-%d")
     file_name = code.replace("/","~") + "_" + data_date_str
 
     if os.path.isfile(data_dir + file_name + r'.pkl'):
@@ -28,16 +33,19 @@ def get_quandl_data(code):
 
 dummy_data_cache = {}
 def get_dummy_data(ticker):
+    """
+    Get dummy (random) data
+    """
     global dummy_data_cache
     if ticker not in dummy_data_cache:
-        init_date = datetime.datetime.strptime("2010-01-01","%Y-%m-%d")
-        dates = []
-        date = init_date
-        while date.strftime("%Y-%m-%d") != datetime.datetime.now().strftime("%Y-%m-%d"):
-            date += datetime.timedelta(days=1)
-            dates.append(date.strftime("%Y-%m-%d"))
-        values = [random.randint(1,100)/100.0 + 50 for x in dates]
+        init_date = datetime.strptime("2010-01-01","%Y-%m-%d")
+        target_date = datetime.now()
+        range_dates = range(0, (target_date - init_date).days)
+
+        dates = [(init_date + timedelta(days=x)).strftime('%Y-%m-%d') for x in range_dates]
+        values = [random.randint(1,100)/100.0 + 50 for x in range_dates]
         data = {'Date': dates, 'Value': values}
+
         df = pd.DataFrame(data)
         df['Date'] = pd.to_datetime(df['Date'])
         ts = pd.Series(df['Value'].values, index=df['Date'])
@@ -50,19 +58,36 @@ def get_dummy_data(ticker):
     }
     return ret
 
+db_cache = {}
 def query_data(ticker, ticker_type, start_date, end_date):
+    """
+    Get data from cache (if does not exist, download from Quandl or Yahoo).
+    Then pick up the required range [start_date:end_date]
+
+    Arguments:
+    ticker: ticker name.
+    ticker_type: 'QUANDL' or 'YAHOO'.
+    start_date: .
+    end_date: .
+    """
     global db_cache
     key = ticker + "@" + ticker_type
     if key not in db_cache:
-        db_cache[key] = get_quandl_data(ticker) # consider add ticker_type (for example - here  the ticker_type is quandl.)
-        # db_cache[key] = get_dummy_data(ticker) # consider add ticker_type (for example - here  the ticker_type is quandl.)
-    raw_data = db_cache[key]
+        if ticker_type == 'QUANDL':
+            db_cache[key] = get_quandl_data(ticker) # consider add ticker_type (for example - here  the ticker_type is quandl.)
+            # db_cache[key] = get_dummy_data(ticker) # consider add ticker_type (for example - here  the ticker_type is quandl.)
+        elif ticker_type == 'YAHOO':
+            db_cache[key] = pd.read_csv('./yahoo_data/{}.csv'.format(ticker), index_col='Date', parse_dates=['Date'])
+        else:
+            raise Exception('Unknown ticker_type: ' + ticker_type)
 
-    refined_data = pd.Series(raw_data["Settle"])[start_date:end_date]
+    raw_data = db_cache[key]['Settle'] if ticker_type == 'QUANDL' else db_cache[key]['Adj Close']
+
+    refined_data = pd.Series(raw_data)[start_date:end_date]
 
     # fix this temp hack - needs correct holiday calendar.
     if len(refined_data) == 0 and start_date == end_date:
-        refined_data = pd.Series(raw_data["Settle"])[start_date - datetime.timedelta(days=5):end_date]
+        refined_data = pd.Series(raw_data)[start_date - timedelta(days=5):end_date]
         refined_data = refined_data[0:1]
     return refined_data
 

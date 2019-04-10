@@ -57,8 +57,12 @@ def strategy(name=None, from_date=None, to_date=None):
     # print("*** In strategy function: name = '{}', from_date = {}, to_date = {}".format(name, from_date, to_date))
 
     if name is not None and from_date is None:
-        from_date = datetime.today() + relativedelta(months = -1)  # Default 1M
-        to_date = datetime.today().strftime("%Y-%m-%d")
+        if name.startswith('Strategy_Short_VXX'):
+            from_date = pd.to_datetime('2019-01-01')
+            to_date = '2019-01-30'
+        else:
+            from_date = datetime.today() + relativedelta(months = -1)  # Default 1M
+            to_date = datetime.today().strftime("%Y-%m-%d")
     return render_template('tradable.html', tradable_type='strategy', tradable_name=name, from_date=from_date, to_date=to_date)
 
 @app.route('/internal/strategy_postback', methods=['GET', 'POST'])

@@ -7,15 +7,15 @@ from .tradable_manager import TradableManager
 class TradableBase():
     def __init__(self, name, ccy):
 
-        #standard properties
+        # standard properties
         self.name = name
         self.type = self.__class__.__name__
         self.ccy = ccy
 
-        #flexible parameters
+        # flexible parameters
         self.param_data = {}
 
-        #time series
+        # time series
         self.values = pd.Series()
 
         # register in strategy manager
