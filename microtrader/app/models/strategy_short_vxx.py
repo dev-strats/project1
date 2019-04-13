@@ -55,5 +55,8 @@ class StrategyShortVXX(StrategyBase):
             values.append(value)
             prev_price = vxx_data[date]
 
+            if date_iter <= end_date:
+                self.children_strategies = {"YAHOO_VXX": position, "USD": value - vxx_data[date]*position}
+
         self.values = pd.Series(values, index=bdays)[start_date : end_date]
         return self.values

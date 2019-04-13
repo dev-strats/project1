@@ -38,6 +38,16 @@ class TradableBase():
         return None
 
     def get_values_stats(self,start_date,end_date):
+        # if self.values has no data between start and end date just return error value
+        pd_series_1 = self.values[start_date:end_date]
+        if len(pd_series_1) < 2:
+            return {
+                "return":   None,
+                "volatility":   None,
+                "max_draw_down": None,
+                "sharpe_ratio": None
+            }
+
         ret = math_funcs.get_return(self.values,start_date,end_date)
         vol = math_funcs.get_vol(self.values,start_date,end_date)
         max_draw_down = math_funcs.get_max_draw_down(self.values,start_date,end_date)

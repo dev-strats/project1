@@ -29,8 +29,10 @@ class TradableManager():
         # this will be replaced by proper load of real positions
 
         from .index_product import IndexProduct
+        from .etf_product import EtfProduct
+
         IndexProduct('VIX', 'YAHOO')
-        IndexProduct('VXX', 'YAHOO')
+        EtfProduct('VXX', 'YAHOO')
 
         from .rolling_future_strategy import RollingFutureStrategy
         from .vol_target import VolTarget
