@@ -71,5 +71,3 @@ def get_return(pd_series, start_date, end_date):
     # to be robust on start_date, end_date being holidays
     pd_series_1 = pd_series[start_date:end_date]
     return (pd_series_1[-1] - pd_series_1[0])/pd_series_1[0]
-
-
