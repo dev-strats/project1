@@ -48,6 +48,7 @@ def return_optimizer_with_constraint(
 
     # this fatol seems not picked up - check what is going on...
     bestParam = scipy.optimize.minimize(mini_wrapper, initGuess, method = 'Nelder-Mead', options = {"maxiter":30,"fatol":0.001,"disp":True})
+    bestParam = bestParam['x']
     bestParamDict = {paramKeys[i]:bestParam[i] for i in range(len(bestParam))}
     bestParamMerged = {**bestParamDict, **fixParams}
     strategyObj.update(**bestParamMerged)

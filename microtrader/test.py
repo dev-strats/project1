@@ -5,6 +5,8 @@ from app.models.cash import Cash
 from app.models.tradable_base import TradableManager
 from app.utils import converter
 from app.optimizers import simple_optimizer
+from app.randomizers import market_data_randomizer
+from app.datasource import quandl_wrapper
 
 TradableManager.load_strategies()
 strategyObj = TradableManager.get_tradable_by_name("Strategy_Short_VXX_001")
@@ -25,6 +27,26 @@ res = simple_optimizer.return_optimizer_with_constraint(
 )
 
 print(res)
+
+# now set to randomized mkt data
+
+market_data_randomizer.set_deterministic_mode(False)
+quandl_wrapper.set_data_disturbance_vol(0.02)
+
+res1 = simple_optimizer.return_optimizer_with_constraint(
+    strategyObj,
+    startDate,
+    endDate,
+    paramsSpace = paramsSpace, # dictionary with key being param, and value being the range of the param..
+    initialParams = initialParams,
+    fixParams = fixParams,
+    maxDrawDownLimit = None,
+    volLimit = None
+)
+
+print(res1)
+
+print('res', res, 'res1', res1)
 # # initialize basic data
 # usd = Cash("USD")
 #

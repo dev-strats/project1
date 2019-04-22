@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import os
 import pickle
 import random
+from app.randomizers import market_data_randomizer
 
 quandl.ApiConfig.api_key = 'eAxLue6aGM4kwQcqSHqX'
 
@@ -58,6 +59,11 @@ def get_dummy_data(ticker):
     }
     return ret
 
+data_disturbance_vol = 0
+def set_data_disturbance_vol(vol):
+    global data_disturbance_vol
+    data_disturbance_vol = vol
+
 db_cache = {}
 def query_data(ticker, ticker_type, start_date, end_date):
     """
@@ -89,6 +95,11 @@ def query_data(ticker, ticker_type, start_date, end_date):
     if len(refined_data) == 0 and start_date == end_date:
         refined_data = pd.Series(raw_data)[start_date - timedelta(days=5):end_date]
         refined_data = refined_data[0:1]
+
+    def randomize_func(x):
+        return market_data_randomizer.get_randomized_data_log_normal(x,data_disturbance_vol)
+
+    refined_data.apply(randomize_func)
     return refined_data
 
 if __name__ == "__main__":
