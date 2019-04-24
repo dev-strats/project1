@@ -54,7 +54,9 @@ class TradableManager():
         StrategyShortVXX('Strategy_Short_VXX_001', 'USD', pd.to_datetime('2009-01-30'), pd.to_datetime('2019-01-30'),
                          open_threshold = 25,
                          close_threshold = 15,
-                         max_vxx_incr_days = 3
+                         max_vxx_incr_days = 3,
+                         exec_prob = 'uniform',
+                         exec_threshold = 0.0
         )
 
     @staticmethod
