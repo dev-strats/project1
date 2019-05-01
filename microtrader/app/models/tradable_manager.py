@@ -40,17 +40,17 @@ class TradableManager():
         from .asset_allocation_inverse_vol import AssetAllocationInverseVol
         from .strategy_short_vxx import StrategyShortVXX
 
-        RollingFutureStrategy("Rolling_Future_001", "USD", pd.to_datetime("2013-04-15"), ticker_root = "ES", ticker_type = "QUANDL", initial_contract = "CME/ESM2013" )
-        VolTarget("Vol_Target_on_Rolling_Future_001", "USD", pd.to_datetime("2013-04-15"), underlying_strategy_name = "Rolling_Future_001", cap = 0.8, target = 0.2, beta=0.8)
-        Cash("USD")
-        AssetAllocationInverseVol("Asset_Allocation_Inverse_Vol_001", "USD", pd.to_datetime("2013-04-15"),
-                                  initial_weights = {
-                                      "Rolling_Future_001":0.5,
-                                      "Vol_Target_on_Rolling_Future_001":0.5
-                                  },
-                                  initial_vol = 0.2,
-                                  beta = 0.8
-        )
+        # RollingFutureStrategy("Rolling_Future_001", "USD", pd.to_datetime("2013-04-15"), ticker_root = "ES", ticker_type = "QUANDL", initial_contract = "CME/ESM2013" )
+        # VolTarget("Vol_Target_on_Rolling_Future_001", "USD", pd.to_datetime("2013-04-15"), underlying_strategy_name = "Rolling_Future_001", cap = 0.8, target = 0.2, beta=0.8)
+        # Cash("USD")
+        # AssetAllocationInverseVol("Asset_Allocation_Inverse_Vol_001", "USD", pd.to_datetime("2013-04-15"),
+        #                           initial_weights = {
+        #                               "Rolling_Future_001":0.5,
+        #                               "Vol_Target_on_Rolling_Future_001":0.5
+        #                           },
+        #                           initial_vol = 0.2,
+        #                           beta = 0.8
+        # )
         StrategyShortVXX('Strategy_Short_VXX_001', 'USD', pd.to_datetime('2009-01-30'), pd.to_datetime('2019-01-30'),
                          open_threshold = 25,
                          close_threshold = 15,

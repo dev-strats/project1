@@ -65,6 +65,11 @@ def set_data_disturbance_vol(vol):
     data_disturbance_vol = vol
 
 db_cache = {}
+
+def clear_data_cache():
+    global db_cache
+    db_cache = {}
+
 def query_data(ticker, ticker_type, start_date, end_date):
     """
     Get data from cache (if does not exist, download from Quandl or Yahoo).
@@ -99,7 +104,7 @@ def query_data(ticker, ticker_type, start_date, end_date):
     def randomize_func(x):
         return market_data_randomizer.get_randomized_data_log_normal(x,data_disturbance_vol)
 
-    refined_data.apply(randomize_func)
+    refined_data = refined_data.apply(randomize_func)
     return refined_data
 
 if __name__ == "__main__":

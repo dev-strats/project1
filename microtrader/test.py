@@ -15,6 +15,7 @@ endDate = pd.to_datetime("2019-01-01")
 paramsSpace = {"open_threshold": (10,30), "close_threshold":(10,30)}
 fixParams = {"max_vxx_incr_days":3}
 initialParams = {"open_threshold": 25, "close_threshold":15}
+# res = strategyObj.get_values(startDate, endDate)
 res = simple_optimizer.return_optimizer_with_constraint(
     strategyObj,
     startDate,
@@ -26,13 +27,11 @@ res = simple_optimizer.return_optimizer_with_constraint(
     volLimit = None
 )
 
-print(res)
-
 # now set to randomized mkt data
 
 market_data_randomizer.set_deterministic_mode(False)
 quandl_wrapper.set_data_disturbance_vol(0.02)
-
+# res1 = strategyObj.get_values(startDate, endDate)
 res1 = simple_optimizer.return_optimizer_with_constraint(
     strategyObj,
     startDate,
@@ -41,12 +40,11 @@ res1 = simple_optimizer.return_optimizer_with_constraint(
     initialParams = initialParams,
     fixParams = fixParams,
     maxDrawDownLimit = None,
-    volLimit = None
+    volLimit = None,
+    mc_paths = 10
 )
-
-print(res1)
-
-print('res', res, 'res1', res1)
+print('res', res)
+print('res1', res1)
 # # initialize basic data
 # usd = Cash("USD")
 #

@@ -1,5 +1,7 @@
 import scipy.optimize
 import numpy as np
+from app.randomizers import market_data_randomizer
+from app.utils import math_funcs
 
 def return_optimizer_with_constraint(
     strategyObj,
@@ -9,7 +11,8 @@ def return_optimizer_with_constraint(
     initialParams = None,
     fixParams = None,
     maxDrawDownLimit = None,
-    volLimit = None
+    volLimit = None,
+    mc_paths = None # if not None it is used the random mktdata perturbation case.
 ):
     # this function assumes all params for optimization are scalars - more adaptions needed to apply it to non-scalar cases
     # construct a target function by ret with cost on maxDrawDown and vol.
@@ -18,6 +21,7 @@ def return_optimizer_with_constraint(
     initGuess = np.array([initialParams[key] for key in paramKeys])
 
     def target_return_func(params):
+        market_data_randomizer.set_random_seed(1234) # this ensures the optimization is on the same set of data
         for i in range(len(params)):
             (lower, upper) = paramRanges[i]
             if (lower != None and params[i] < lower) or (upper != None and params[i] > upper):
@@ -27,10 +31,18 @@ def return_optimizer_with_constraint(
         paramsMerged = {**paramsToUpdate, **fixParams}
         strategyObj.update(**paramsMerged)
 
-        strategyObj.get_values(startDate, endDate)
-        stats = strategyObj.get_values_stats(startDate, endDate)
-        print(paramsMerged)
-        print(stats)
+        if mc_paths == None:
+            strategyObj.get_values(startDate, endDate)
+            stats = strategyObj.get_values_stats(startDate, endDate)
+        else:
+            all_stats = {}
+            for mc_i in range(mc_paths):
+                strategyObj.clear_all_values()
+                strategyObj.get_values(startDate, endDate)
+                stats = strategyObj.get_values_stats(startDate, endDate)
+                math_funcs.add_dict_in_place(all_stats, stats)
+            all_stats = {k:all_stats[k]/mc_paths for k in all_stats}
+            stats = all_stats
 
         ret = stats["return"]
         if maxDrawDownLimit != None:

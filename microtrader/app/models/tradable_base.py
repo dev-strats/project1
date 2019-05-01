@@ -37,6 +37,9 @@ class TradableBase():
     def get_values(self,start_date,end_date):
         return None
 
+    def clear_all_values(self):
+        self.values = pd.Series()
+
     def get_values_stats(self,start_date,end_date):
         # if self.values has no data between start and end date just return error value
         pd_series_1 = self.values[start_date:end_date]
