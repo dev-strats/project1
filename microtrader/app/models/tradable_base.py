@@ -102,6 +102,13 @@ class TradableBase():
         with open(file_name,"w") as out_file:
             json.dump(self.to_json(),out_file)
 
+    def save_values_to_csv_file(self, file_name):
+        with open(file_name,'w') as outFile:
+            outFile.write("date, value")
+            for item in self.values.iteritems():
+                outFile.write("\n")
+                outFile.write(",".join([item[0].to_pydatetime().strftime("%Y-%m-%d"),str(item[1])]))
+
     def load_from_file(self):
         file_name = os.curdir+"\\storage\\"+self.name+".json"
 

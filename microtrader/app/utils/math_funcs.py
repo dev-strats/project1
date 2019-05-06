@@ -70,4 +70,20 @@ def get_vol(pd_series, start_date, end_date):
 def get_return(pd_series, start_date, end_date):
     # to be robust on start_date, end_date being holidays
     pd_series_1 = pd_series[start_date:end_date]
-    return (pd_series_1[-1] - pd_series_1[0])/pd_series_1[0]
+    return (pd_series_1[-1] - pd_series_1[0])/pd_series_1[0]/(end_date.to_pydatetime() - start_date.to_pydatetime()).days * 365
+
+def save_strategies_values_to_csv_file(strategies, file_name):
+    # this is used to compare multiple strategies
+    tags = ["date"] + ["strategy_" + str(i) for i in range(len(strategies))]
+    dates = [strategy.values.index for strategy in strategies]
+    all_dates = set()
+    for dates_this in dates:
+        all_dates = set(dates_this) | all_dates
+    all_dates = list(all_dates)
+    all_dates.sort()
+    with open(file_name,'w') as outFile:
+        outFile.write(",".join(tags))
+        for date in all_dates:
+            outFile.write("\n")
+            outFile.write(",".join([date.to_pydatetime().strftime("%Y-%m-%d")] + [str(strategy.values[date]) for strategy in strategies]))
+

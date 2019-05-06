@@ -35,8 +35,8 @@ class StrategyShortVXX(StrategyBase):
 
         # bdays = pd.bdate_range(start_date, end_date) # use standard API to get business days
         bdays = vxx_data.index
-        print('Start Date: ' + bdays[0].strftime("%Y-%m-%d"))
-        print('End Date:   ' + bdays[-1].strftime("%Y-%m-%d"))
+        # print('Start Date: ' + bdays[0].strftime("%Y-%m-%d"))
+        # print('End Date:   ' + bdays[-1].strftime("%Y-%m-%d"))
 
         value = 100.0
         values = []
