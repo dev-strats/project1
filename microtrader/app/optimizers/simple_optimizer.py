@@ -93,7 +93,7 @@ def return_optimizer_with_constraint(
         paramsMerged = {**paramsToUpdate, **fixParams}
 
         if vary_start_date:
-            test_dates = [startDate + datetime.timedelta(days = i*start_date_freq_days) for i in range((endDate - startDate).days//start_date_freq_days)]
+            test_dates = [startDate + datetime.timedelta(days = i*start_date_freq_days) for i in range(1+(endDate - startDate).days//start_date_freq_days)]
         else:
             test_dates = [startDate]
 
@@ -138,6 +138,7 @@ def return_optimizer_with_constraint(
     bestParam = bestParam['x']
     bestParamDict = {paramKeys[i]:bestParam[i] for i in range(len(bestParam))}
     bestParamMerged = {**bestParamDict, **fixParams}
+    bestParamMerged["start_date"] = startDate
     strategyObj.update(**bestParamMerged)
     strategyObj.get_values(startDate, endDate)
     stats = strategyObj.get_values_stats(startDate, endDate)
