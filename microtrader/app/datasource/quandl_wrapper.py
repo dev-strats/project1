@@ -88,7 +88,7 @@ def query_data(ticker, ticker_type, start_date, end_date):
             db_cache[key] = get_quandl_data(ticker) # consider add ticker_type (for example - here  the ticker_type is quandl.)
             # db_cache[key] = get_dummy_data(ticker) # consider add ticker_type (for example - here  the ticker_type is quandl.)
         elif ticker_type == 'YAHOO':
-            data_path = os.path.join(os.path.join(os.path.join(os.path.abspath(__file__), os.pardir), os.pardir), os.pardir)
+            data_path = os.path.join(os.path.join(os.path.dirname(__file__), os.pardir), os.pardir)
             db_cache[key] = pd.read_csv(data_path+'/yahoo_data/{}.csv'.format(ticker), index_col='Date', parse_dates=['Date'])
         else:
             raise Exception('Unknown ticker_type: ' + ticker_type)
