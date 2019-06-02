@@ -51,7 +51,7 @@ class TradableManager():
         #                           initial_vol = 0.2,
         #                           beta = 0.8
         # )
-        StrategyShortVXX('Strategy_Short_VXX_001', 'USD', pd.to_datetime('2009-01-30'), pd.to_datetime('2019-01-30'),
+        StrategyShortVXX('Strategy_Short_VXX_001', 'USD', pd.to_datetime('2009-01-30'), pd.to_datetime('2019-05-31'),
                          open_threshold = 25,
                          close_threshold = 15,
                          max_vxx_incr_days = 3,

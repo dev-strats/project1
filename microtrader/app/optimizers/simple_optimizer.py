@@ -113,7 +113,10 @@ def return_optimizer_with_constraint(
             if verbose:
                 print(test_date, stats)
             math_funcs.add_dict_in_place(all_stats, stats)
-        all_stats = {k:all_stats[k]/len(test_dates) for k in all_stats}
+        try:
+            all_stats = {k:all_stats[k]/len(test_dates) for k in all_stats}
+        except Exception as exptn:
+            raise Exception("Not able to calculate statistics - check data source is complete: original error message: " + str(exptn))
         stats = all_stats
 
         if verbose:
