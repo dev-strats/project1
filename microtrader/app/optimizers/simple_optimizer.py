@@ -4,6 +4,8 @@ from app.randomizers import market_data_randomizer
 from app.utils import math_funcs
 from pathos.multiprocessing import ProcessingPool as Pool
 import datetime
+import itertools
+import copy
 
 def eval_strategy_with_params(
     strategyObj,
@@ -61,7 +63,7 @@ def return_optimizer_with_constraint(
     strategyObj,
     startDate,
     endDate,
-    paramsSpace = None, # dictionary with key being param, and value being the range of the param..
+    paramsSpace = None, # dictionary with key being param, and value being the range of the param..It can be a [min, max] list (with min=None or max=None means no boundary) or the grid [x1,x2,x3...] list for parallel grid.
     initialParams = None,
     fixParams = None,
     maxDrawDownLimit = None,
@@ -71,18 +73,20 @@ def return_optimizer_with_constraint(
     num_processes = None,
     verbose = False,
     vary_start_date = False, # if true will use average value of varying start dates
-    start_date_freq_days = 1
+    start_date_freq_days = 1,
+    optimization_method = 'Nelder-Mead'
 ):
     # this function assumes all params for optimization are scalars - more adaptions needed to apply it to non-scalar cases
     # construct a target function by ret with cost on maxDrawDown and vol.
     paramKeys = list(paramsSpace.keys())
-    paramRanges = list(paramsSpace.values()) # tuple of (min, max), set to None for no limit on either side
+    paramRanges = list(paramsSpace.values())
     initGuess = np.array([initialParams[key] for key in paramKeys])
 
-    def target_return_func(params):
+    def target_return_func(params, strategyObjPtr):
         market_data_randomizer.set_random_seed(1234) # this ensures the optimization is on the same set of data
         for i in range(len(params)):
-            (lower, upper) = paramRanges[i]
+            lower = paramRanges[i][0]
+            upper = paramRanges[i][-1]
             if (lower != None and params[i] < lower) or (upper != None and params[i] > upper):
                 return -1
 
@@ -101,7 +105,7 @@ def return_optimizer_with_constraint(
         for test_date in test_dates:
             paramsMerged["start_date"] = test_date
             stats = eval_strategy_with_params(
-                strategyObj,
+                strategyObjPtr,
                 paramsMerged,
                 test_date,
                 endDate,
@@ -133,13 +137,31 @@ def return_optimizer_with_constraint(
 
         return ret
 
-    def mini_wrapper(params):
-        return - target_return_func(params)
+    if optimization_method == 'Nelder-Mead':
+        def mini_wrapper(params):
+            return - target_return_func(params, strategyObj)
 
-    # this fatol seems not picked up - check what is going on...
-    bestParam = scipy.optimize.minimize(mini_wrapper, initGuess, method = 'Nelder-Mead', options = {"maxiter":30,"xatol":0.05,"disp":True})
-    bestParam = bestParam['x']
-    bestParamDict = {paramKeys[i]:bestParam[i] for i in range(len(bestParam))}
+        # this fatol seems not picked up - check what is going on...
+        bestParam = scipy.optimize.minimize(mini_wrapper, initGuess, method = 'Nelder-Mead', options = {"maxiter":30,"xatol":0.05,"disp":True})
+        bestParam = bestParam['x']
+        bestParamDict = {paramKeys[i]:bestParam[i] for i in range(len(bestParam))}
+    elif optimization_method == "Parallel-Grid":
+        parallel_grids = []
+        for element in itertools.product(*paramRanges):
+            parallel_grids.append(element)
+
+        # parallel this code below
+        res = []
+        for grid in parallel_grids:
+            strategyObjCpy = copy.deepcopy(strategyObj)
+            ret = target_return_func(grid, strategyObjCpy)
+            res.append(ret)
+        bestRes = max(res)
+        grid = parallel_grids[res.index(bestRes)]
+        bestParamDict = {paramKeys[i]:grid[i] for i in range(len(grid))}
+    else:
+        raise Exception("Unknown method")
+
     bestParamMerged = {**bestParamDict, **fixParams}
     bestParamMerged["start_date"] = startDate
     strategyObj.update(**bestParamMerged)
@@ -148,7 +170,3 @@ def return_optimizer_with_constraint(
     stats["bestParams"] = bestParamDict
 
     return stats
-
-
-
-
